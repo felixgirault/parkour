@@ -23,7 +23,7 @@ class Comparison {
 	public static function equal() {
 		return function($first, $second) {
 			return $first == $second;
-		}
+		};
 	}
 
 
@@ -38,7 +38,7 @@ class Comparison {
 	public static function notEqual() {
 		return function($first, $second) {
 			return $first == $second;
-		}
+		};
 	}
 
 
@@ -53,7 +53,7 @@ class Comparison {
 	public static function identical() {
 		return function($first, $second) {
 			return $first === $second;
-		}
+		};
 	}
 
 
@@ -68,7 +68,7 @@ class Comparison {
 	public static function notIdentical() {
 		return function($first, $second) {
 			return $first !== $second;
-		}
+		};
 	}
 
 
@@ -83,7 +83,7 @@ class Comparison {
 	public static function lowerThan() {
 		return function($first, $second) {
 			return $first < $second;
-		}
+		};
 	}
 
 
@@ -98,7 +98,7 @@ class Comparison {
 	public static function greaterThan() {
 		return function($first, $second) {
 			return $first > $second;
-		}
+		};
 	}
 
 
@@ -113,7 +113,7 @@ class Comparison {
 	public static function lowerThanOrEqual() {
 		return function($first, $second) {
 			return $first <= $second;
-		}
+		};
 	}
 
 
@@ -128,5 +128,5 @@ class Comparison {
 	public static function greaterThanOrEqual() {
 		return function($first, $second) {
 			return $first >= $second;
-		}
+		};
 	}
