@@ -82,15 +82,18 @@ class Parkour {
 	 *	Executes a function on each of the given values and returns a
 	 *	cunjunction of the results.
 	 *
+	 *	@see mapReduce()
 	 *	@param array $data Data.
-	 *	@param Closure $closure Closure.
-	 *	@param boolean $result Initial result.
+	 *	@param Closure $mapper Closure.
+	 *	@param boolean $memo Initial result.
 	 *	@return boolean Result.
 	 */
-	public static function reduceAnd(array $data, Closure $closure, $result = true) {
-		return self::reduce($data, function($result, $value, $key) use ($closure) {
-			return $result && $closure($value, $key);
-		}, $result);
+	public static function reduceAnd(array $data, Closure $mapper, $memo = true) {
+		$reduce = function($memo, $value) {
+			return $memo && $value;
+		};
+
+		return self::mapReduce($data, $mapper, $reduce, $memo);
 	}
 
 
@@ -99,15 +102,18 @@ class Parkour {
 	 *	Executes a function on each of the given values and returns a
 	 *	disjunction of the results.
 	 *
+	 *	@see mapReduce()
 	 *	@param array $data Data.
-	 *	@param Closure $closure Closure.
-	 *	@param boolean $result Initial result.
+	 *	@param Closure $mapper Closure.
+	 *	@param boolean $memo Initial result.
 	 *	@return boolean Result.
 	 */
-	public static function reduceOr(array $data, Closure $closure, $result = false) {
-		return self::reduce($data, function($result, $value, $key) use ($closure) {
-			return $result || $closure($value, $key);
-		}, $result);
+	public static function reduceOr(array $data, Closure $mapper, $memo = false) {
+		$reduce = function($memo, $value) {
+			return $memo || $value;
+		};
+
+		return self::mapReduce($data, $mapper, $reduce, $memo);
 	}
 
 
