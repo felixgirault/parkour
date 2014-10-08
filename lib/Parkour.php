@@ -91,7 +91,7 @@ class Parkour {
 	 */
 
 	public static function reduceAnd(array $data, Closure $map, $memo = true) {
-		return self::mapReduce($data, $map, Operation::cunjunct(), $memo);
+		return self::mapReduce($data, $map, Operation::conjunct(), $memo);
 	}
 
 
