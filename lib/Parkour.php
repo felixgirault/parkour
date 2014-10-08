@@ -64,7 +64,7 @@ class Parkour {
 	 *	@param mixed $memo Initial value to reduce.
 	 *	@return mixed Result.
 	 */
-	public function mapReduce(
+	public static function mapReduce(
 		array $data,
 		Closure $map,
 		Closure $reduce,
