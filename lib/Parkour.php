@@ -19,14 +19,14 @@ class Parkour {
 	 *	Filters each of the given values through a function.
 	 *
 	 *	@param array $data Data.
-	 *	@param Closure $closure Closure.
+	 *	@param Closure $mapper Closure.
 	 *	@return array Mapped data.
 	 */
-	public static function map(array $data, Closure $closure) {
+	public static function map(array $data, Closure $mapper) {
 		$mapped = [];
 
 		foreach ($data as $key => $value) {
-			$mapped[$key] = $closure($value, $key);
+			$mapped[$key] = $mapper($value, $key);
 		}
 
 		return $mapped;
@@ -38,13 +38,13 @@ class Parkour {
 	 *	Boils down a list of values to a single value.
 	 *
 	 *	@param array $data Data.
-	 *	@param Closure $closure Closure.
+	 *	@param Closure $reducer Closure.
 	 *	@param mixed $memo Initial value.
 	 *	@return mixed Result.
 	 */
-	public static function reduce(array $data, Closure $closure, $memo = null) {
+	public static function reduce(array $data, Closure $reducer, $memo = null) {
 		foreach ($data as $key => $value) {
-			$memo = $closure($memo, $value, $key);
+			$memo = $reducer($memo, $value, $key);
 		}
 
 		return $memo;
