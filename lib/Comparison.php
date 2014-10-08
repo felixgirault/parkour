@@ -130,3 +130,4 @@ class Comparison {
 			return $first >= $second;
 		};
 	}
+}
