@@ -53,6 +53,32 @@ class Parkour {
 
 
 	/**
+	 *	Maps and reduces a list of values.
+	 *
+	 *	@see map()
+	 *	@see reduce()
+	 *	@param array $data Values.
+	 *	@param Closure $mapper Function to map values.
+	 *	@param Closure $reducer Function to reduce values.
+	 *	@param mixed $memo Initial value to reduce.
+	 *	@return mixed Result.
+	 */
+	public function mapReduce(
+		array $data,
+		Closure $mapper,
+		Closure $reducer,
+		$memo = null
+	) {
+		return self::reduce(
+			self::map($data, $mapper),
+			$reducer,
+			$memo
+		);
+	}
+
+
+
+	/**
 	 *	Executes a function on each of the given values and returns a
 	 *	cunjunction of the results.
 	 *
