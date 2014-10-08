@@ -6,6 +6,7 @@
  */
 namespace Parkour;
 
+use Parkour\Operation;
 use Closure;
 
 
@@ -88,12 +89,9 @@ class Parkour {
 	 *	@param boolean $memo Initial result.
 	 *	@return boolean Result.
 	 */
-	public static function reduceAnd(array $data, Closure $map, $memo = true) {
-		$reduce = function($memo, $value) {
-			return $memo && $value;
-		};
 
-		return self::mapReduce($data, $map, $reduce, $memo);
+	public static function reduceAnd(array $data, Closure $map, $memo = true) {
+		return self::mapReduce($data, $map, Operation::cunjunct(), $memo);
 	}
 
 
@@ -109,11 +107,7 @@ class Parkour {
 	 *	@return boolean Result.
 	 */
 	public static function reduceOr(array $data, Closure $map, $memo = false) {
-		$reduce = function($memo, $value) {
-			return $memo || $value;
-		};
-
-		return self::mapReduce($data, $map, $reduce, $memo);
+		return self::mapReduce($data, $map, Operation::disjunct(), $memo);
 	}
 
 
