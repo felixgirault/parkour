@@ -7,6 +7,7 @@
 namespace Parkour;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use ReflectionClass;
 
 
 
@@ -18,46 +19,26 @@ class ParkourTest extends TestCase {
 	/**
 	 *
 	 */
-	public $Closures = null;
-
-
-
-	/**
-	 *
-	 */
-	public function setUp() {
-		$this->Closures = $this->getMock('stdClass', [
-			'closure'
-		]);
-	}
-
-
-
-	/**
-	 *
-	 */
 	public function testMap() {
-		$this->Closures
-			->expects($this->any())
-			->method('closure')
-			->will($this->returnValueMap([
-				[1, 'a', 2],
-				[2, 'b', 4]
-			]));
-
 		$data = [
 			'a' => 1,
 			'b' => 2
 		];
 
-		$mapped = Parkour::map($data, function($value, $key) {
-			return $this->Closures->closure($value, $key);
-		});
+		$closure = Utility::closure($this, [
+			[1, 'a', 2],
+			[2, 'b', 4]
+		]);
 
-		$this->assertEquals([
+		$expected = [
 			'a' => 2,
 			'b' => 4
-		], $mapped);
+		];
+
+		$this->assertEquals(
+			$expected,
+			Parkour::map($data, $closure)
+		);
 	}
 
 
@@ -65,21 +46,20 @@ class ParkourTest extends TestCase {
 	/**
 	 *
 	 */
-	public function testReduceCalls() {
-		$this->Closures
-			->expects($this->any())
-			->method('closure')
-			->will($this->returnValueMap([
-				[0, 1, 0, 1],
-				[1, 2, 1, 3]
-			]));
-
+	public function testReduce() {
 		$data = [1, 2];
-		$reduced = Parkour::reduce($data, function($memo, $value, $key) {
-			return $this->Closures->closure($memo, $value, $key);
-		}, 0);
 
-		$this->assertEquals(3, $reduced);
+		$closure = Utility::closure($this, [
+			[0, 1, 0, 1],
+			[1, 2, 1, 3]
+		]);
+
+		$expected = 3;
+
+		$this->assertEquals(
+			$expected,
+			Parkour::reduce($data, $closure, 0)
+		);
 	}
 
 
@@ -88,26 +68,24 @@ class ParkourTest extends TestCase {
 	 *
 	 */
 	public function testFilter() {
-		$this->Closures
-			->expects($this->any())
-			->method('closure')
-			->will($this->returnValueMap([
-				[1, 'a', false],
-				[2, 'b', true]
-			]));
-
 		$data = [
 			'a' => 1,
 			'b' => 2
 		];
 
-		$filtered = Parkour::filter($data, function($value, $key) {
-			return $this->Closures->closure($value, $key);
-		});
+		$closure = Utility::closure($this, [
+			[1, 'a', false],
+			[2, 'b', true]
+		]);
 
-		$this->assertEquals([
+		$expected = [
 			'b' => 2
-		], $filtered);
+		];
+
+		$this->assertEquals(
+			$expected,
+			Parkour::filter($data, $closure)
+		);
 	}
 
 
@@ -122,25 +100,31 @@ class ParkourTest extends TestCase {
 			['id' => 3, 'name' => 'b']
 		];
 
-		// overwriting existing names
-		$indexed = Parkour::combine($users, function($user) {
+		$closure = function($user) {
 			yield $user['name'] => $user['id'];
-		});
+		};
 
-		$this->assertEquals([
+		$expected = [
 			'a' => 1,
 			'b' => 3
-		], $indexed);
+		];
 
-		// not overwriting existing names
-		$indexed = Parkour::combine($users, function($user) {
-			yield $user['name'] => $user['id'];
-		}, false);
+		// overwriting existing names
+		$this->assertEquals(
+			$expected,
+			Parkour::combine($users, $closure)
+		);
 
-		$this->assertEquals([
+		$expected = [
 			'a' => 1,
 			'b' => 2
-		], $indexed);
+		];
+
+		// not overwriting existing names
+		$this->assertEquals(
+			$expected,
+			Parkour::combine($users, $closure, false)
+		);
 	}
 
 
@@ -149,18 +133,56 @@ class ParkourTest extends TestCase {
 	 *
 	 */
 	public function testInvoke() {
-		$this->Closures
-			->expects($this->once())
-			->method('closure')
-			->with(
-				$this->equalTo('b'),
-				$this->equalTo('a')
-			);
+		$data = [
+			'a' => 1,
+			'b' => 2
+		];
 
-		$data = ['a' => 'b'];
+		$closure = Utility::closure($this, [
+			[1, 'a', null],
+			[2, 'b', null]
+		]);
 
-		Parkour::invoke($data, function($value, $key) {
-			$this->Closures->closure($value, $key);
-		});
+		Parkour::invoke($data, $closure);
+	}
+}
+
+
+
+/**
+ *	Builds testable closures.
+ */
+class Utility {
+
+	/**
+	 *	Name of the method to mock.
+	 *
+	 *	@var string
+	 */
+	const method = 'method';
+
+
+
+	/**
+	 *	Returns a closure constrained by the given values.
+	 *
+	 *	@see https://phpunit.de/manual/current/en/test-doubles.html#test-doubles.stubs.examples.StubTest5.php
+	 *	@param TestCase $Test Test case using the factory.
+	 *	@param array $values Values.
+	 *	@return Closure Closure.
+	 */
+	public static function closure(TestCase $Test, array $values) {
+		$Mock = $Test->getMock('stdClass', [
+			self::method
+		]);
+
+		$Mock->expects($Test->any())
+			->method(self::method)
+			->will($Test->returnValueMap($values));
+
+		$Reflection = new ReflectionClass($Mock);
+		$Method = $Reflection->getMethod(self::method);
+
+		return $Method->getClosure($Mock);
 	}
 }
