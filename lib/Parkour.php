@@ -119,12 +119,18 @@ class Parkour {
 	 *	@param Closure $filter Filter function.
 	 *	@return array Filtered data.
 	 */
-	public static function filter(array $data, Closure $filter) {
+	public static function filter(array $data, Closure $filter, $preserveKeys = true) {
 		$filtered = [];
 
 		foreach ($data as $key => $value) {
-			if ($filter($value, $key)) {
+			if (!$filter($value, $key)) {
+				continue;
+			}
+
+			if ($preserveKeys) {
 				$filtered[$key] = $value;
+			} else {
+				$filtered[] = $value;
 			}
 		}
 

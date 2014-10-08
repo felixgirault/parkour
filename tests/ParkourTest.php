@@ -108,9 +108,18 @@ class ParkourTest extends TestCase {
 			'b' => 2
 		];
 
+		// preserving keys
 		$this->assertEquals(
 			$expected,
 			Parkour::filter($data, $closure)
+		);
+
+		$expected = [2];
+
+		// not preserving keys
+		$this->assertEquals(
+			$expected,
+			Parkour::filter($data, $closure, false)
 		);
 	}
 
