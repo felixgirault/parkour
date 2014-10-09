@@ -70,11 +70,12 @@ class Parkour {
 		callable $reduce,
 		$memo = null
 	) {
-		return self::reduce(
-			self::map($data, $map),
-			$reduce,
-			$memo
-		);
+		foreach ($data as $key => $value) {
+			$mapped = $map($value, $key);
+			$memo = $reduce($memo, $mapped, $key);
+		}
+		
+		return $memo;
 	}
 
 
