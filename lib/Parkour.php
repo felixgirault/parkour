@@ -7,7 +7,6 @@
 namespace Parkour;
 
 use Parkour\Operation;
-use Closure;
 
 
 
@@ -20,10 +19,10 @@ class Parkour {
 	 *	Filters each of the given values through a function.
 	 *
 	 *	@param array $data Data.
-	 *	@param Closure $map Closure.
+	 *	@param callable $map callable.
 	 *	@return array Mapped data.
 	 */
-	public static function map(array $data, Closure $map) {
+	public static function map(array $data, callable $map) {
 		$mapped = [];
 
 		foreach ($data as $key => $value) {
@@ -39,11 +38,11 @@ class Parkour {
 	 *	Boils down a list of values to a single value.
 	 *
 	 *	@param array $data Data.
-	 *	@param Closure $reduce Closure.
+	 *	@param callable $reduce callable.
 	 *	@param mixed $memo Initial value.
 	 *	@return mixed Result.
 	 */
-	public static function reduce(array $data, Closure $reduce, $memo = null) {
+	public static function reduce(array $data, callable $reduce, $memo = null) {
 		foreach ($data as $key => $value) {
 			$memo = $reduce($memo, $value, $key);
 		}
@@ -59,15 +58,15 @@ class Parkour {
 	 *	@see map()
 	 *	@see reduce()
 	 *	@param array $data Values.
-	 *	@param Closure $map Function to map values.
-	 *	@param Closure $reduce Function to reduce values.
+	 *	@param callable $map Function to map values.
+	 *	@param callable $reduce Function to reduce values.
 	 *	@param mixed $memo Initial value to reduce.
 	 *	@return mixed Result.
 	 */
 	public static function mapReduce(
 		array $data,
-		Closure $map,
-		Closure $reduce,
+		callable $map,
+		callable $reduce,
 		$memo = null
 	) {
 		return self::reduce(
@@ -85,12 +84,12 @@ class Parkour {
 	 *
 	 *	@see mapReduce()
 	 *	@param array $data Data.
-	 *	@param Closure $map Closure.
+	 *	@param callable $map callable.
 	 *	@param boolean $memo Initial result.
 	 *	@return boolean Result.
 	 */
 
-	public static function reduceAnd(array $data, Closure $map, $memo = true) {
+	public static function reduceAnd(array $data, callable $map, $memo = true) {
 		return self::mapReduce($data, $map, Operation::conjunct(), $memo);
 	}
 
@@ -102,11 +101,11 @@ class Parkour {
 	 *
 	 *	@see mapReduce()
 	 *	@param array $data Data.
-	 *	@param Closure $map Closure.
+	 *	@param callable $map callable.
 	 *	@param boolean $memo Initial result.
 	 *	@return boolean Result.
 	 */
-	public static function reduceOr(array $data, Closure $map, $memo = false) {
+	public static function reduceOr(array $data, callable $map, $memo = false) {
 		return self::mapReduce($data, $map, Operation::disjunct(), $memo);
 	}
 
@@ -116,10 +115,10 @@ class Parkour {
 	 *	Returns all values that pass a truth test.
 	 *
 	 *	@param array $data Data.
-	 *	@param Closure $filter Filter function.
+	 *	@param callable $filter Filter function.
 	 *	@return array Filtered data.
 	 */
-	public static function filter(array $data, Closure $filter, $preserveKeys = true) {
+	public static function filter(array $data, callable $filter, $preserveKeys = true) {
 		$filtered = [];
 
 		foreach ($data as $key => $value) {
@@ -143,11 +142,11 @@ class Parkour {
 	 *
 	 *
 	 *	@param array $data Data.
-	 *	@param Closure $index Index function.
+	 *	@param callable $index Index function.
 	 *	@param boolean $overwrite Should duplicate keys be overwritten ?
 	 *	@return array Indexed data.
 	 */
-	public static function combine(array $data, Closure $index, $overwrite = true) {
+	public static function combine(array $data, callable $index, $overwrite = true) {
 		$indexed = [];
 
 		foreach ($data as $key => $value) {
@@ -167,11 +166,11 @@ class Parkour {
 	 *	Invokes a callback on each key/value pair of the given data.
 	 *
 	 *	@param array $data Data.
-	 *	@param Closure $closure Closure.
+	 *	@param callable $callable callable.
 	 */
-	public static function invoke(array $data, Closure $closure) {
+	public static function invoke(array $data, callable $callable) {
 		foreach ($data as $key => $value) {
-			$closure($value, $key);
+			$callable($value, $key);
 		}
 	}
 }
