@@ -6,7 +6,8 @@
  */
 namespace Parkour;
 
-use Parkour\Operation;
+use Parkour\Functor\Conjunct;
+use Parkour\Functor\Disjunct;
 
 
 
@@ -89,7 +90,7 @@ class Parkour {
 	 *	@return boolean Result.
 	 */
 	public static function reduceAnd(array $data, callable $map, $memo = true) {
-		return self::mapReduce($data, $map, Operation::conjunct(), $memo);
+		return self::mapReduce($data, $map, new Conjunct(), $memo);
 	}
 
 
@@ -105,7 +106,7 @@ class Parkour {
 	 *	@return boolean Result.
 	 */
 	public static function reduceOr(array $data, callable $map, $memo = false) {
-		return self::mapReduce($data, $map, Operation::disjunct(), $memo);
+		return self::mapReduce($data, $map, new Disjunct(), $memo);
 	}
 
 
