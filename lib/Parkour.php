@@ -18,8 +18,8 @@ class Parkour {
 	/**
 	 *	Filters each of the given values through a function.
 	 *
-	 *	@param array $data Data.
-	 *	@param callable $map callable.
+	 *	@param array $data Values.
+	 *	@param callable $map Function to map values.
 	 *	@return array Mapped data.
 	 */
 	public static function map(array $data, callable $map) {
@@ -37,8 +37,8 @@ class Parkour {
 	/**
 	 *	Boils down a list of values to a single value.
 	 *
-	 *	@param array $data Data.
-	 *	@param callable $reduce callable.
+	 *	@param array $data Values.
+	 *	@param callable $reduce Function to reduce values.
 	 *	@param mixed $memo Initial value.
 	 *	@return mixed Result.
 	 */
@@ -83,12 +83,11 @@ class Parkour {
 	 *	cunjunction of the results.
 	 *
 	 *	@see mapReduce()
-	 *	@param array $data Data.
-	 *	@param callable $map callable.
+	 *	@param array $data Values.
+	 *	@param callable $map Function to reduce values.
 	 *	@param boolean $memo Initial result.
 	 *	@return boolean Result.
 	 */
-
 	public static function reduceAnd(array $data, callable $map, $memo = true) {
 		return self::mapReduce($data, $map, Operation::conjunct(), $memo);
 	}
@@ -100,8 +99,8 @@ class Parkour {
 	 *	disjunction of the results.
 	 *
 	 *	@see mapReduce()
-	 *	@param array $data Data.
-	 *	@param callable $map callable.
+	 *	@param array $data Values.
+	 *	@param callable $map Function to reduce values.
 	 *	@param boolean $memo Initial result.
 	 *	@return boolean Result.
 	 */
@@ -114,9 +113,9 @@ class Parkour {
 	/**
 	 *	Returns all values that pass a truth test.
 	 *
-	 *	@param array $data Data.
-	 *	@param callable $filter Filter function.
-	 *	@return array Filtered data.
+	 *	@param array $data Values.
+	 *	@param callable $filter Function to filter values.
+	 *	@return array Filtered values.
 	 */
 	public static function filter(array $data, callable $filter, $preserveKeys = true) {
 		$filtered = [];
@@ -141,10 +140,10 @@ class Parkour {
 	/**
 	 *
 	 *
-	 *	@param array $data Data.
-	 *	@param callable $index Index function.
+	 *	@param array $data Values.
+	 *	@param callable $index Function to index values.
 	 *	@param boolean $overwrite Should duplicate keys be overwritten ?
-	 *	@return array Indexed data.
+	 *	@return array Indexed values.
 	 */
 	public static function combine(array $data, callable $index, $overwrite = true) {
 		$indexed = [];
@@ -165,8 +164,8 @@ class Parkour {
 	/**
 	 *	Invokes a callback on each key/value pair of the given data.
 	 *
-	 *	@param array $data Data.
-	 *	@param callable $callable callable.
+	 *	@param array $data Values.
+	 *	@param callable $callable Function to invoke on values.
 	 */
 	public static function invoke(array $data, callable $callable) {
 		foreach ($data as $key => $value) {
