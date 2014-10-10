@@ -74,7 +74,7 @@ class Parkour {
 			$mapped = $map($value, $key);
 			$memo = $reduce($memo, $mapped, $key);
 		}
-		
+
 		return $memo;
 	}
 
@@ -143,22 +143,22 @@ class Parkour {
 	 *
 	 *
 	 *	@param array $data Values.
-	 *	@param callable $index Function to index values.
+	 *	@param callable $combine Function to combine values.
 	 *	@param boolean $overwrite Should duplicate keys be overwritten ?
 	 *	@return array Indexed values.
 	 */
-	public static function combine(array $data, callable $index, $overwrite = true) {
-		$indexed = [];
+	public static function combine(array $data, callable $combine, $overwrite = true) {
+		$combined = [];
 
 		foreach ($data as $key => $value) {
-			foreach ($index($value, $key) as $k => $v) {
-				if ($overwrite || !isset($indexed[$k])) {
-					$indexed[$k] = $v;
+			foreach ($combine($value, $key) as $k => $v) {
+				if ($overwrite || !isset($combined[$k])) {
+					$combined[$k] = $v;
 				}
 			}
 		}
 
-		return $indexed;
+		return $combined;
 	}
 
 
