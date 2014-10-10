@@ -199,4 +199,29 @@ class Parkour {
 
 		return $reindexed;
 	}
+
+
+
+	/**
+	 *	Makes every value that is numerically indexed a key, given $default
+	 *	as value.
+	 *
+	 *	@param array $data Values.
+	 *	@param mixed $default Default value.
+	 *	@return array Normalized values.
+	 */
+	public static function normalize(array $data, $default) {
+		$normalized = [];
+
+		foreach ($data as $key => $value) {
+			if (is_numeric($key)) {
+				$key = $value;
+				$value = $default;
+			}
+
+			$normalized[$key] = $value;
+		}
+
+		return $normalized;
+	}
 }

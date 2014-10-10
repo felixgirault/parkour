@@ -284,4 +284,30 @@ class ParkourTest extends TestCase {
 			Parkour::reindex($data, $map, false)
 		);
 	}
+
+
+
+	/**
+	 *
+	 */
+	public function testNormalize() {
+		$data = [
+			'one',
+			'two' => 'three',
+			'four'
+		];
+
+		$default = 'default';
+
+		$expected = [
+			'one' => $default,
+			'two' => 'three',
+			'four' => $default
+		];
+
+		$this->assertEquals(
+			$expected,
+			Parkour::normalize($data, $default)
+		);
+	}
 }
