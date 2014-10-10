@@ -12,10 +12,14 @@ The aim of this library is to provide a consistent API, unlike the one natively 
 API
 ---
 
+```php
+use Parkour\Parkour as _;
+```
+
 ### map()
 
 ```php
-Parkour::map([1, 2], function($value, $key) {
+_::map([1, 2], function($value, $key) {
 	return $value * 2;
 });
 
@@ -25,7 +29,7 @@ Parkour::map([1, 2], function($value, $key) {
 ### reduce()
 
 ```php
-Parkour::reduce([1, 2], function($memo, $value, $key) {
+_::reduce([1, 2], function($memo, $value, $key) {
 	return $memo + $value;
 }, 0);
 
@@ -43,7 +47,7 @@ $reduce = function($memo, $value, $key) {
 	return $memo + $value;
 };
 
-Parkour::mapReduce([1, 2], $map, $reduce, 0);
+_::mapReduce([1, 2], $map, $reduce, 0);
 
 // 6
 ```
@@ -51,13 +55,13 @@ Parkour::mapReduce([1, 2], $map, $reduce, 0);
 ### allOk()
 
 ```php
-Parkour::allOk([1, 2], function($value, $key) {
+_::allOk([1, 2], function($value, $key) {
 	return $value === 1;
 });
 
 // false
 
-Parkour::allOk([1, 2], function($value, $key) {
+_::allOk([1, 2], function($value, $key) {
 	return true;
 });
 
@@ -67,13 +71,13 @@ Parkour::allOk([1, 2], function($value, $key) {
 ### oneOk()
 
 ```php
-Parkour::oneOk([1, 2], function($value, $key) {
+_::oneOk([1, 2], function($value, $key) {
 	return false;
 });
 
 // false
 
-Parkour::oneOk([1, 2], function($value, $key) {
+_::oneOk([1, 2], function($value, $key) {
 	return $value === 1;
 });
 
@@ -83,7 +87,7 @@ Parkour::oneOk([1, 2], function($value, $key) {
 ### filter()
 
 ```php
-Parkour::filter([1, 2], function($value, $key) {
+_::filter([1, 2], function($value, $key) {
 	return $value === 1;
 });
 
@@ -98,7 +102,7 @@ $data = [
 	['key' => 2, 'value' => 'bar']
 ];
 
-Parkour::combine($data, function($row, $key) {
+_::combine($data, function($row, $key) {
 	yield $row['key'] => $row['value'];
 });
 
@@ -108,7 +112,7 @@ Parkour::combine($data, function($row, $key) {
 ### invoke()
 
 ```php
-Parkour::invoke(['foo' => 'bar'], function($value, $key) {
+_::invoke(['foo' => 'bar'], function($value, $key) {
 	echo "$key: $value";
 });
 
@@ -120,7 +124,7 @@ Parkour::invoke(['foo' => 'bar'], function($value, $key) {
 ```php
 $data = ['foo' => 'bar'];
 
-Parkour::reindex($data, [
+_::reindex($data, [
 	'foo' => 'baz'
 ]);
 
@@ -135,7 +139,7 @@ $data = [
 	'baz'
 ];
 
-Parkour::normalize($data, true);
+_::normalize($data, true);
 
 // ['foo' => 'bar', 'baz' => true]
 ```
