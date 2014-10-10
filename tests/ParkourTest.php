@@ -93,6 +93,52 @@ class ParkourTest extends TestCase {
 	/**
 	 *
 	 */
+	public function testAllOk() {
+		$data = [1, 2];
+
+		$closure = Utility::closure($this, [
+			[1, 0, true],
+			[2, 1, false]
+		]);
+
+		$this->assertFalse(Parkour::allOk($data, $closure));
+
+		$closure = Utility::closure($this, [
+			[1, 0, true],
+			[2, 1, true]
+		]);
+
+		$this->assertTrue(Parkour::allOk($data, $closure));
+	}
+
+
+
+	/**
+	 *
+	 */
+	public function testOneOk() {
+		$data = [1, 2];
+
+		$closure = Utility::closure($this, [
+			[1, 0, false],
+			[2, 1, false]
+		]);
+
+		$this->assertFalse(Parkour::oneOk($data, $closure));
+
+		$closure = Utility::closure($this, [
+			[1, 0, false],
+			[2, 1, true]
+		]);
+
+		$this->assertTrue(Parkour::oneOk($data, $closure));
+	}
+
+
+
+	/**
+	 *
+	 */
 	public function testFilter() {
 		$data = [
 			'a' => 1,
