@@ -257,4 +257,31 @@ class ParkourTest extends TestCase {
 
 		Parkour::invoke($data, $closure);
 	}
+
+
+
+	/**
+	 *
+	 */
+	public function testReindex() {
+		$data = ['foo' => 'bar'];
+		$map = ['foo' => 'baz'];
+
+		$expected = [
+			'foo' => 'bar',
+			'baz' => 'bar'
+		];
+
+		$this->assertEquals(
+			$expected,
+			Parkour::reindex($data, $map)
+		);
+
+		$expected = ['baz' => 'bar'];
+
+		$this->assertEquals(
+			$expected,
+			Parkour::reindex($data, $map, false)
+		);
+	}
 }

@@ -173,4 +173,30 @@ class Parkour {
 			$callable($value, $key);
 		}
 	}
+
+
+
+	/**
+	 *	Reindexes a list of values.
+	 *
+	 *	@param array $data Values.
+	 *	@param array $map An map of correspondances of the form
+	 *		['currentIndex' => 'newIndex'].
+	 *	@return boolean $keepUnmapped Whether or not to keep keys that are not
+	 *		remapped.
+	 *	@return array Reindexed values.
+	 */
+	public static function reindex(array $data, array $map, $keepUnmapped = true) {
+		$reindexed = $keepUnmapped
+			? $data
+			: [];
+
+		foreach ($map as $from => $to) {
+			if (isset($data[$from])) {
+				$reindexed[$to] = $data[$from];
+			}
+		}
+
+		return $reindexed;
+	}
 }
