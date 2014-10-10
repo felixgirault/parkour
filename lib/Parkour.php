@@ -82,7 +82,7 @@ class Parkour {
 
 	/**
 	 *	Executes a function on each of the given values and returns a
-	 *	cunjunction of the results.
+	 *	cunjunction of the results, i.e. if all of the results are truthy.
 	 *
 	 *	@see mapReduce()
 	 *	@param array $data Values.
@@ -97,7 +97,7 @@ class Parkour {
 
 	/**
 	 *	Executes a function on each of the given values and returns a
-	 *	disjunction of the results.
+	 *	disjunction of the results, i.e. if at least one result is truthy.
 	 *
 	 *	@see mapReduce()
 	 *	@param array $data Values.
