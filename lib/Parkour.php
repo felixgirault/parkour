@@ -86,12 +86,11 @@ class Parkour {
 	 *
 	 *	@see mapReduce()
 	 *	@param array $data Values.
-	 *	@param callable $map Function to reduce values.
-	 *	@param boolean $memo Initial result.
+	 *	@param callable $callable Function to execute.
 	 *	@return boolean Result.
 	 */
-	public static function reduceAnd(array $data, callable $map, $memo = true) {
-		return self::mapReduce($data, $map, new Conjunct(), $memo);
+	public static function allOk(array $data, callable $callable) {
+		return self::mapReduce($data, $callable, new Conjunct(), true);
 	}
 
 
@@ -102,12 +101,11 @@ class Parkour {
 	 *
 	 *	@see mapReduce()
 	 *	@param array $data Values.
-	 *	@param callable $map Function to reduce values.
-	 *	@param boolean $memo Initial result.
+	 *	@param callable $callable Function to execute.
 	 *	@return boolean Result.
 	 */
-	public static function reduceOr(array $data, callable $map, $memo = false) {
-		return self::mapReduce($data, $map, new Disjunct(), $memo);
+	public static function oneOk(array $data, callable $callable) {
+		return self::mapReduce($data, $callable, new Disjunct(), false);
 	}
 
 
