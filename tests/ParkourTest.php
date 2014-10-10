@@ -7,6 +7,7 @@
 namespace Parkour;
 
 use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit_Framework_MockObject_Matcher_ConsecutiveParameters as ConsecutiveParameters;
 use ReflectionClass;
 
 
@@ -30,6 +31,13 @@ class ParkourTest extends TestCase {
 		$Mocker = $Mock->expects($this->any());
 		$Mocker->method('method');
 		$Mocker->will($this->returnValueMap($values));
+
+		$with = array_map(function($arguments) {
+			return array_slice($arguments, 0, -1);
+		}, $values);
+
+		$Matcher = new ConsecutiveParameters($with);
+		$Mocker->getMatcher()->parametersMatcher = $Matcher;
 
 		$Reflection = new ReflectionClass($Mock);
 		$Method = $Reflection->getMethod('method');
