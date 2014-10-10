@@ -34,6 +34,14 @@ _::reduce([1, 2], function($memo, $value, $key) {
 }, 0);
 
 // 3
+
+_::reduce([1, 2], new Parkour\Functor\Add(), 0);
+
+// 3
+
+_::reduce([2, 2], new Parkour\Functor\Mutiply(), 2);
+
+// 8
 ```
 
 ### mapReduce()
