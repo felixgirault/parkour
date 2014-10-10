@@ -140,7 +140,7 @@ class Parkour {
 
 
 	/**
-	 *
+	 *	Indexes an array depending on the values it contains.
 	 *
 	 *	@param array $data Values.
 	 *	@param callable $combine Function to combine values.
@@ -151,10 +151,11 @@ class Parkour {
 		$combined = [];
 
 		foreach ($data as $key => $value) {
-			foreach ($combine($value, $key) as $k => $v) {
-				if ($overwrite || !isset($combined[$k])) {
-					$combined[$k] = $v;
-				}
+			$Combinator = $combine($value, $key);
+			$index = $Combinator->key();
+
+			if ($overwrite || !isset($combined[$index])) {
+				$combined[$index] = $Combinator->current();
 			}
 		}
 
