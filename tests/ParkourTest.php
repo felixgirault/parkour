@@ -23,12 +23,17 @@ class ParkourTest extends TestCase {
 	 *	@see https://phpunit.de/manual/current/en/test-doubles.html#test-doubles.stubs.examples.StubTest5.php
 	 *	@see https://phpunit.de/manual/current/en/test-doubles.html#test-doubles.mock-objects.examples.with-consecutive.php
 	 *	@param array $values Values.
+	 *	@param int $calls Number of expected calls.
 	 *	@return Closure Closure.
 	 */
-	public function closure(array $values) {
+	public function closure(array $values, $calls = null) {
+		if ($calls === null) {
+			$calls = count($values);
+		}
+
 		$Mock = $this->getMock('stdClass', ['method']);
 
-		$Mocker = $Mock->expects($this->exactly(count($values)));
+		$Mocker = $Mock->expects($this->exactly($calls));
 		$Mocker->method('method');
 		$Mocker->will($this->returnValueMap($values));
 
