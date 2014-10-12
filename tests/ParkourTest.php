@@ -28,7 +28,7 @@ class ParkourTest extends TestCase {
 	public function closure(array $values) {
 		$Mock = $this->getMock('stdClass', ['method']);
 
-		$Mocker = $Mock->expects($this->any());
+		$Mocker = $Mock->expects($this->exactly(count($values)));
 		$Mocker->method('method');
 		$Mocker->will($this->returnValueMap($values));
 
@@ -190,6 +190,11 @@ class ParkourTest extends TestCase {
 			$expected,
 			Parkour::filter($data, $closure)
 		);
+
+		$closure = $this->closure([
+			[1, 'a', false],
+			[2, 'b', true]
+		]);
 
 		$expected = [2];
 
