@@ -81,31 +81,53 @@ class Parkour {
 
 
 	/**
-	 *	Executes a function on each of the given values and returns a
-	 *	cunjunction of the results, i.e. if all of the results are truthy.
+	 *	Executes a function on each of the given values and returns if all
+	 *	results are truthy.
 	 *
-	 *	@see mapReduce()
 	 *	@param array $data Values.
 	 *	@param callable $callable Function to execute.
+	 *	@param boolean $greedy When false, the itaration will stop on the
+	 *		first falsy result.
 	 *	@return boolean Result.
 	 */
-	public static function allOk(array $data, callable $callable) {
-		return self::mapReduce($data, $callable, new Conjunct(), true);
+	public static function allOk(array $data, callable $callable, $greedy = false) {
+		if ($greedy) {
+			return self::mapReduce($data, $callable, new Conjunct(), true);
+		}
+
+		foreach ($data as $key => $value) {
+			if (!$callable($value, $key)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 
 
 	/**
-	 *	Executes a function on each of the given values and returns a
-	 *	disjunction of the results, i.e. if at least one result is truthy.
+	 *	Executes a function on each of the given values and returns if at
+	 *	least one result is truthy.
 	 *
-	 *	@see mapReduce()
 	 *	@param array $data Values.
 	 *	@param callable $callable Function to execute.
+	 *	@param boolean $greedy When false, the itaration will stop on the
+	 *		first truthy result.
 	 *	@return boolean Result.
 	 */
-	public static function oneOk(array $data, callable $callable) {
-		return self::mapReduce($data, $callable, new Disjunct(), false);
+	public static function oneOk(array $data, callable $callable, $greedy = false) {
+		if ($greedy) {
+			return self::mapReduce($data, $callable, new Disjunct(), false);
+		}
+
+		foreach ($data as $key => $value) {
+			if ($callable($value, $key)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 
