@@ -18,7 +18,7 @@ class Equal {
 	 *
 	 *	@param mixed $first First value.
 	 *	@param mixed $second Second value.
-	 *	@return mixed Result.
+	 *	@return boolean Result.
 	 */
 	public function __invoke($first, $second) {
 		return $first == $second;
