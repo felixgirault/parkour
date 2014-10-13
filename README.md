@@ -16,6 +16,20 @@ API
 use Parkour\Parkour as _;
 ```
 
+[map()](#map)
+[reduce()](#reduce)
+[mapReduce()](#mapreduce)
+[allOk()](#allok)
+[oneOk()](#oneok)
+[firstOk()](#firstok)
+[firstNotOk()](#firstnotok)
+[filter()](#filter)
+[passing()](#passing)
+[combine()](#combine)
+[invoke()](#invoke)
+[reindex()](#reindex)
+[normalize()](#normalize)
+
 ### map()
 
 ```php
