@@ -204,11 +204,22 @@ class ParkourTest extends TestCase {
 			'b' => 2
 		];
 
-		// preserving keys
 		$this->assertEquals(
 			$expected,
 			Parkour::filter($data, $closure)
 		);
+	}
+
+
+
+	/**
+	 *
+	 */
+	public function testPassing() {
+		$data = [
+			'a' => 1,
+			'b' => 2
+		];
 
 		$closure = $this->closure([
 			[1, 'a', false],
@@ -217,10 +228,9 @@ class ParkourTest extends TestCase {
 
 		$expected = [2];
 
-		// not preserving keys
 		$this->assertEquals(
 			$expected,
-			Parkour::filter($data, $closure, false)
+			Parkour::passing($data, $closure, false)
 		);
 	}
 

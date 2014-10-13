@@ -133,28 +133,43 @@ class Parkour {
 
 
 	/**
-	 *	Returns all values that pass a truth test.
+	 *	Returns all values that pass a truth test, keeping their keys.
 	 *
 	 *	@param array $data Values.
-	 *	@param callable $filter Function to filter values.
+	 *	@param callable $test Function to test values.
 	 *	@return array Filtered values.
 	 */
-	public static function filter(array $data, callable $filter, $preserveKeys = true) {
+	public static function filter(array $data, callable $test) {
 		$filtered = [];
 
 		foreach ($data as $key => $value) {
-			if (!$filter($value, $key)) {
-				continue;
-			}
-
-			if ($preserveKeys) {
+			if ($test($value, $key)) {
 				$filtered[$key] = $value;
-			} else {
-				$filtered[] = $value;
 			}
 		}
 
 		return $filtered;
+	}
+
+
+
+	/**
+	 *	Returns all values that pass a truth test.
+	 *
+	 *	@param array $data Values.
+	 *	@param callable $test Function to test values.
+	 *	@return array Filtered values.
+	 */
+	public static function passing(array $data, callable $test) {
+		$passing = [];
+
+		foreach ($data as $key => $value) {
+			if ($test($value, $key)) {
+				$passing[] = $value;
+			}
+		}
+
+		return $passing;
 	}
 
 
