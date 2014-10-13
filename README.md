@@ -95,7 +95,22 @@ _::oneOk([1, 2], function($value, $key) {
 ### filter()
 
 ```php
-_::filter([1, 2], function($value, $key) {
+$data = [
+	'a' => 1,
+	'b' => 2
+];
+
+_::filter($data, function($value, $key) {
+	return $value === 1;
+});
+
+// ['a' => 1]
+```
+
+### passing()
+
+```php
+_::passing([1, 2], function($value, $key) {
 	return $value === 1;
 });
 
