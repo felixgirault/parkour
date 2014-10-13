@@ -92,6 +92,36 @@ _::oneOk([1, 2], function($value, $key) {
 // true
 ```
 
+### firstOk()
+
+```php
+$data = [
+	'a' => 1,
+	'b' => 2
+];
+
+_::firstOk($data, function($value, $key) {
+	return true;
+});
+
+// 'a'
+```
+
+### firstNotOk()
+
+```php
+$data = [
+	'a' => 1,
+	'b' => 2
+];
+
+_::firstOk($data, function($value, $key) {
+	return false;
+});
+
+// 'a'
+```
+
 ### filter()
 
 ```php
