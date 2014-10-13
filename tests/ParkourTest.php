@@ -135,16 +135,9 @@ class ParkourTest extends TestCase {
 		$closure = $this->closure([
 			[1, 0, false],
 			[2, 1, true]
-		], 1);
-
-		$this->assertFalse(Parkour::allOk($data, $closure));
-
-		$closure = $this->closure([
-			[1, 0, false],
-			[2, 1, true]
 		]);
 
-		$this->assertFalse(Parkour::allOk($data, $closure, true));
+		$this->assertFalse(Parkour::allOk($data, $closure));
 
 		$closure = $this->closure([
 			[1, 0, true],
@@ -172,16 +165,55 @@ class ParkourTest extends TestCase {
 		$closure = $this->closure([
 			[1, 0, true],
 			[2, 1, false]
-		], 1);
+		]);
 
 		$this->assertTrue(Parkour::oneOk($data, $closure));
+	}
+
+
+
+	/**
+	 *
+	 */
+	public function testFirstOk() {
+		$data = [1, 2];
+
+		$closure = $this->closure([
+			[1, 0, false],
+			[2, 1, false]
+		]);
+
+		$this->assertFalse(Parkour::firstOk($data, $closure));
 
 		$closure = $this->closure([
 			[1, 0, true],
 			[2, 1, false]
+		], 1);
+
+		$this->assertEquals(0, Parkour::firstOk($data, $closure));
+	}
+
+
+
+	/**
+	 *
+	 */
+	public function testFirstNotOk() {
+		$data = [1, 2];
+
+		$closure = $this->closure([
+			[1, 0, true],
+			[2, 1, true]
 		]);
 
-		$this->assertTrue(Parkour::oneOk($data, $closure, true));
+		$this->assertFalse(Parkour::firstNotOk($data, $closure));
+
+		$closure = $this->closure([
+			[1, 0, false],
+			[2, 1, true]
+		], 1);
+
+		$this->assertEquals(0, Parkour::firstNotOk($data, $closure));
 	}
 
 

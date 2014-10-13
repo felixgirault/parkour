@@ -85,23 +85,11 @@ class Parkour {
 	 *	results are truthy.
 	 *
 	 *	@param array $data Values.
-	 *	@param callable $callable Function to execute.
-	 *	@param boolean $greedy When false, the itaration will stop on the
-	 *		first falsy result.
+	 *	@param callable $test Function to execute.
 	 *	@return boolean Result.
 	 */
-	public static function allOk(array $data, callable $callable, $greedy = false) {
-		if ($greedy) {
-			return self::mapReduce($data, $callable, new Conjunct(), true);
-		}
-
-		foreach ($data as $key => $value) {
-			if (!$callable($value, $key)) {
-				return false;
-			}
-		}
-
-		return true;
+	public static function allOk(array $data, callable $test) {
+		return self::mapReduce($data, $test, new Conjunct(), true);
 	}
 
 
@@ -111,19 +99,47 @@ class Parkour {
 	 *	least one result is truthy.
 	 *
 	 *	@param array $data Values.
-	 *	@param callable $callable Function to execute.
-	 *	@param boolean $greedy When false, the itaration will stop on the
-	 *		first truthy result.
+	 *	@param callable $test Function to execute.
 	 *	@return boolean Result.
 	 */
-	public static function oneOk(array $data, callable $callable, $greedy = false) {
-		if ($greedy) {
-			return self::mapReduce($data, $callable, new Disjunct(), false);
+	public static function oneOk(array $data, callable $test) {
+		return self::mapReduce($data, $test, new Disjunct(), false);
+	}
+
+
+
+	/**
+	 *	Executes a function on each of the given values and returns the key
+	 *	passed to the first passing function.
+	 *
+	 *	@param array $data Values.
+	 *	@param callable $test Function to execute.
+	 *	@return boolean Result.
+	 */
+	public static function firstOk(array $data, callable $test) {
+		foreach ($data as $key => $value) {
+			if ($test($value, $key)) {
+				return $key;
+			}
 		}
 
+		return false;
+	}
+
+
+
+	/**
+	 *	Executes a function on each of the given values and returns the key
+	 *	passed to the first failing function.
+	 *
+	 *	@param array $data Values.
+	 *	@param callable $test Function to execute.
+	 *	@return boolean Result.
+	 */
+	public static function firstNotOk(array $data, callable $test) {
 		foreach ($data as $key => $value) {
-			if ($callable($value, $key)) {
-				return true;
+			if (!$test($value, $key)) {
+				return $key;
 			}
 		}
 
