@@ -246,4 +246,26 @@ class Parkour {
 
 		return $normalized;
 	}
+
+
+
+	/**
+	 *	Yields numbers in a given interval.
+	 *	This method is a port of the range() function from underscore.js.
+	 *
+	 *	@see http://underscorejs.org/docs/underscore.html#section-60
+	 *	@param int $from Start value.
+	 *	@param int $to End value (not inclusive).
+	 *	@param int $step Step.
+	 *	@yields int Value.
+	 */
+	public static function range($from, $to, $step = null) {
+		$step = $step ?: 1;
+		$count = max(ceil(($to - $from) / $step), 0);
+
+		for ($i = 0; $i < $count; $i++, $from += $step) {
+			yield $from;
+		}
+	}
 }
+

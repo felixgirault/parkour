@@ -334,4 +334,51 @@ class ParkourTest extends TestCase {
 			Parkour::normalize($data, $default)
 		);
 	}
+
+
+
+	/**
+	 *
+	 */
+	public function testRange() {
+		$result = [];
+
+		foreach (Parkour::range(0, 5) as $i) {
+			$result[] = $i;
+		}
+
+		$this->assertEquals([0, 1, 2, 3, 4], $result);
+
+		$result = [];
+
+		foreach (Parkour::range(2, 7, 2) as $i) {
+			$result[] = $i;
+		}
+
+		$this->assertEquals([2, 4, 6], $result);
+
+		$result = [];
+
+		foreach (Parkour::range(10, 2) as $i) {
+			$result[] = $i;
+		}
+
+		$this->assertEquals([], $result);
+
+		$result = [];
+
+		foreach (Parkour::range(10, 5, -2) as $i) {
+			$result[] = $i;
+		}
+
+		$this->assertEquals([10, 8, 6], $result);
+
+		$result = [];
+
+		foreach (Parkour::range(-4, -2) as $i) {
+			$result[] = $i;
+		}
+
+		$this->assertEquals([-4, -3], $result);
+	}
 }
