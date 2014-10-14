@@ -221,7 +221,7 @@ class Parkour {
 	 *	@param array $data Values.
 	 *	@param callable $callable Function to invoke on values.
 	 */
-	public static function invoke(array $data, callable $callable) {
+	public static function each(array $data, callable $callable) {
 		foreach ($data as $key => $value) {
 			$callable($value, $key);
 		}

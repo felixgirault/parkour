@@ -26,7 +26,7 @@ use Parkour\Parkour as _;
 [filter()](#filter),
 [passing()](#passing),
 [combine()](#combine),
-[invoke()](#invoke),
+[each()](#each),
 [reindex()](#reindex),
 [normalize()](#normalize).
 
@@ -176,10 +176,10 @@ _::combine($data, function($row, $key) {
 // [1 => 'foo', 2 => 'bar']
 ```
 
-### invoke()
+### each()
 
 ```php
-_::invoke(['foo' => 'bar'], function($value, $key) {
+_::each(['foo' => 'bar'], function($value, $key) {
 	echo "$key: $value";
 });
 

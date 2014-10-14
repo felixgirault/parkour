@@ -310,7 +310,7 @@ class ParkourTest extends TestCase {
 	/**
 	 *
 	 */
-	public function testInvoke() {
+	public function testEach() {
 		$data = [
 			'a' => 1,
 			'b' => 2
@@ -321,7 +321,7 @@ class ParkourTest extends TestCase {
 			[2, 'b', null]
 		]);
 
-		Parkour::invoke($data, $closure);
+		Parkour::each($data, $closure);
 	}
 
 
