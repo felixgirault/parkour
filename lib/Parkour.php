@@ -88,7 +88,7 @@ class Parkour {
 	 *	@param callable $test Function to execute.
 	 *	@return boolean Result.
 	 */
-	public static function allOk(array $data, callable $test) {
+	public static function every(array $data, callable $test) {
 		return self::mapReduce($data, $test, new Conjunct(), true);
 	}
 
@@ -102,7 +102,7 @@ class Parkour {
 	 *	@param callable $test Function to execute.
 	 *	@return boolean Result.
 	 */
-	public static function oneOk(array $data, callable $test) {
+	public static function some(array $data, callable $test) {
 		return self::mapReduce($data, $test, new Disjunct(), false);
 	}
 

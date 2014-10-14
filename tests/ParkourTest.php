@@ -129,7 +129,7 @@ class ParkourTest extends TestCase {
 	/**
 	 *
 	 */
-	public function testAllOk() {
+	public function testEvery() {
 		$data = [1, 2];
 
 		$closure = $this->closure([
@@ -137,14 +137,14 @@ class ParkourTest extends TestCase {
 			[2, 1, true]
 		]);
 
-		$this->assertFalse(Parkour::allOk($data, $closure));
+		$this->assertFalse(Parkour::every($data, $closure));
 
 		$closure = $this->closure([
 			[1, 0, true],
 			[2, 1, true]
 		]);
 
-		$this->assertTrue(Parkour::allOk($data, $closure));
+		$this->assertTrue(Parkour::every($data, $closure));
 	}
 
 
@@ -152,7 +152,7 @@ class ParkourTest extends TestCase {
 	/**
 	 *
 	 */
-	public function testOneOk() {
+	public function testSome() {
 		$data = [1, 2];
 
 		$closure = $this->closure([
@@ -160,14 +160,14 @@ class ParkourTest extends TestCase {
 			[2, 1, false]
 		]);
 
-		$this->assertFalse(Parkour::oneOk($data, $closure));
+		$this->assertFalse(Parkour::some($data, $closure));
 
 		$closure = $this->closure([
 			[1, 0, true],
 			[2, 1, false]
 		]);
 
-		$this->assertTrue(Parkour::oneOk($data, $closure));
+		$this->assertTrue(Parkour::some($data, $closure));
 	}
 
 

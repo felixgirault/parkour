@@ -19,8 +19,8 @@ use Parkour\Parkour as _;
 [map()](#map),
 [reduce()](#reduce),
 [mapReduce()](#mapreduce),
-[allOk()](#allok),
-[oneOk()](#oneok),
+[every()](#every),
+[some()](#some),
 [firstOk()](#firstok),
 [firstNotOk()](#firstnotok),
 [filter()](#filter),
@@ -74,32 +74,32 @@ _::mapReduce([1, 2], $map, $reduce, 0);
 // 6
 ```
 
-### allOk()
+### every()
 
 ```php
-_::allOk([1, 2], function($value, $key) {
+_::every([1, 2], function($value, $key) {
 	return $value === 1;
 });
 
 // false
 
-_::allOk([1, 2], function($value, $key) {
+_::every([1, 2], function($value, $key) {
 	return true;
 });
 
 // true
 ```
 
-### oneOk()
+### some()
 
 ```php
-_::oneOk([1, 2], function($value, $key) {
+_::some([1, 2], function($value, $key) {
 	return false;
 });
 
 // false
 
-_::oneOk([1, 2], function($value, $key) {
+_::some([1, 2], function($value, $key) {
 	return $value === 1;
 });
 
