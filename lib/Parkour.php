@@ -24,13 +24,11 @@ class Parkour {
 	 *	@return array Mapped data.
 	 */
 	public static function map(array $data, callable $map) {
-		$mapped = [];
-
-		foreach ($data as $key => $value) {
-			$mapped[$key] = $map($value, $key);
-		}
-
-		return $mapped;
+		$test = function() {
+			return true;
+		};
+		
+		return self::filterMap($data, $test, $map);
 	}
 
 
@@ -78,6 +76,30 @@ class Parkour {
 		return $memo;
 	}
 
+	/**
+	 *	Filters each of the given values through a function, only if they pass
+	 *	the test
+	 *
+	 *	@param array $data Values.
+	 *	@param callable $test Function to test values.
+	 *	@param callable $map Function to map values.
+	 *	@return array Mapped data.
+	 */
+	public static function filterMap(
+		array $data	,
+		callable $test,
+		callable $map
+	) {
+		$mapped = [];
+
+		foreach ($data as $key => $value) {
+			if ($test($value, $key)) {
+				$mapped[$key] = $map($value, $key);
+			}
+		}
+
+		return $mapped;
+	}
 
 
 	/**
@@ -148,26 +170,6 @@ class Parkour {
 
 	/**
 	 *	Returns all values that pass a truth test, keeping their keys.
-	 *	This function uses a "manual" implementation with foreach
-	 *
-	 *	@param array $data Values.
-	 *	@param callable $test Function to test values.
-	 *	@return array Filtered values.
-	 */
-	private static function filterWithForeach (array $data, callable $test) {
-		$filtered = [];
-
-		foreach ($data as $key => $value) {
-			if ($test($value, $key)) {
-				$filtered[$key] = $value;
-			}
-		}
-
-		return $filtered;
-	}
-
-	/**
-	 *	Returns all values that pass a truth test, keeping their keys.
 	 *
 	 *	@param array $data Values.
 	 *	@param callable $test Function to test values.
@@ -177,7 +179,10 @@ class Parkour {
 		if (defined('ARRAY_FILTER_USE_BOTH')) {
 			return array_filter($data, $test, ARRAY_FILTER_USE_BOTH);
 		} else {
-			return self::filterWithForeach($data, $test);
+			$map = function ($value) {
+				return $value;
+			};
+			return self::filterMap($data, $test, $map);
 		}
 
 	}
