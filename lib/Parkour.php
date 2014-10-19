@@ -42,11 +42,10 @@ class Parkour {
 	 *	@return mixed Result.
 	 */
 	public static function reduce(array $data, callable $reduce, $memo = null) {
-		foreach ($data as $key => $value) {
-			$memo = $reduce($memo, $value, $key);
-		}
-
-		return $memo;
+		$map = function ($value) {
+			return $value;
+		};
+		return self::mapReduce($data, $map, $reduce, $memo);
 	}
 
 
