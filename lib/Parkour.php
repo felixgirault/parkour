@@ -146,16 +146,15 @@ class Parkour {
 		return false;
 	}
 
-
-
 	/**
 	 *	Returns all values that pass a truth test, keeping their keys.
+	 *	This function uses a "manual" implementation with foreach
 	 *
 	 *	@param array $data Values.
 	 *	@param callable $test Function to test values.
 	 *	@return array Filtered values.
 	 */
-	public static function filter(array $data, callable $test) {
+	private static function filterWithForeach (array $data, callable $test) {
 		$filtered = [];
 
 		foreach ($data as $key => $value) {
@@ -165,6 +164,22 @@ class Parkour {
 		}
 
 		return $filtered;
+	}
+
+	/**
+	 *	Returns all values that pass a truth test, keeping their keys.
+	 *
+	 *	@param array $data Values.
+	 *	@param callable $test Function to test values.
+	 *	@return array Filtered values.
+	 */
+	public static function filter(array $data, callable $test) {
+		if (defined('ARRAY_FILTER_USE_BOTH')) {
+			return array_filter($data, $test, ARRAY_FILTER_USE_BOTH);
+		} else {
+			return self::filterWithForeach($data, $test);
+		}
+
 	}
 
 
