@@ -177,15 +177,7 @@ class Parkour {
 	 *	@return array Filtered values.
 	 */
 	public static function passing(array $data, callable $test) {
-		$passing = [];
-
-		foreach ($data as $key => $value) {
-			if ($test($value, $key)) {
-				$passing[] = $value;
-			}
-		}
-
-		return $passing;
+		return array_values(self::filter($data, $test));
 	}
 
 
