@@ -214,9 +214,7 @@ class Parkour {
 	 *	@param callable $callable Function to invoke on values.
 	 */
 	public static function each(array $data, callable $callable) {
-		foreach ($data as $key => $value) {
-			$callable($value, $key);
-		}
+		array_walk($data, $callable);
 	}
 
 
