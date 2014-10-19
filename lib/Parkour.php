@@ -8,6 +8,8 @@ namespace Parkour;
 
 use Parkour\Functor\Conjunct;
 use Parkour\Functor\Disjunct;
+use Parkour\Functor\Identity;
+use Parkour\Functor\AlwaysTrue;
 
 
 
@@ -24,13 +26,7 @@ class Parkour {
 	 *	@return array Mapped data.
 	 */
 	public static function map(array $data, callable $map) {
-		$mapped = [];
-
-		foreach ($data as $key => $value) {
-			$mapped[$key] = $map($value, $key);
-		}
-
-		return $mapped;
+		return self::filterMap($data, new AlwaysTrue(), $map);
 	}
 
 
@@ -44,11 +40,7 @@ class Parkour {
 	 *	@return mixed Result.
 	 */
 	public static function reduce(array $data, callable $reduce, $memo = null) {
-		foreach ($data as $key => $value) {
-			$memo = $reduce($memo, $value, $key);
-		}
-
-		return $memo;
+		return self::mapReduce($data, new Identity(), $reduce, $memo);
 	}
 
 
@@ -78,6 +70,30 @@ class Parkour {
 		return $memo;
 	}
 
+	/**
+	 *	Filters each of the given values through a function, only if they pass
+	 *	the test
+	 *
+	 *	@param array $data Values.
+	 *	@param callable $test Function to test values.
+	 *	@param callable $map Function to map values.
+	 *	@return array Mapped data.
+	 */
+	public static function filterMap(
+		array $data	,
+		callable $test,
+		callable $map
+	) {
+		$mapped = [];
+
+		foreach ($data as $key => $value) {
+			if ($test($value, $key)) {
+				$mapped[$key] = $map($value, $key);
+			}
+		}
+
+		return $mapped;
+	}
 
 
 	/**
@@ -146,8 +162,6 @@ class Parkour {
 		return false;
 	}
 
-
-
 	/**
 	 *	Returns all values that pass a truth test, keeping their keys.
 	 *
@@ -156,15 +170,12 @@ class Parkour {
 	 *	@return array Filtered values.
 	 */
 	public static function filter(array $data, callable $test) {
-		$filtered = [];
-
-		foreach ($data as $key => $value) {
-			if ($test($value, $key)) {
-				$filtered[$key] = $value;
-			}
+		if (defined('ARRAY_FILTER_USE_BOTH')) {
+			return array_filter($data, $test, ARRAY_FILTER_USE_BOTH);
+		} else {
+			return self::filterMap($data, $test, new Identity());
 		}
 
-		return $filtered;
 	}
 
 
@@ -177,15 +188,7 @@ class Parkour {
 	 *	@return array Filtered values.
 	 */
 	public static function passing(array $data, callable $test) {
-		$passing = [];
-
-		foreach ($data as $key => $value) {
-			if ($test($value, $key)) {
-				$passing[] = $value;
-			}
-		}
-
-		return $passing;
+		return array_values(self::filter($data, $test));
 	}
 
 
@@ -222,9 +225,7 @@ class Parkour {
 	 *	@param callable $callable Function to invoke on values.
 	 */
 	public static function each(array $data, callable $callable) {
-		foreach ($data as $key => $value) {
-			$callable($value, $key);
-		}
+		array_walk($data, $callable);
 	}
 
 

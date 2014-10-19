@@ -123,7 +123,31 @@ class ParkourTest extends TestCase {
 			Parkour::mapReduce($data, $mapper, $reducer, 2)
 		);
 	}
+	
+	/**
+	 * 
+	 */ 
+	public function testFilterMap() {
+		$data = [1, 2, 3];
 
+		$mapper = $this->closure([
+			[1, 0, 2],
+			[3, 2, 6]
+		]);
+		
+		$tester = $this->closure([
+			[1, 0, true],
+			[2, 1, false],
+			[3, 2, true]
+		]);
+		
+		$expected = [0 => 2, 2 => 6];
+		
+		$this->assertEquals(
+			$expected,
+			Parkour::filterMap($data, $tester, $mapper)
+		);
+	}
 
 
 	/**

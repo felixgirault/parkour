@@ -154,4 +154,35 @@ class FunctorsTest extends TestCase {
 		$this->assertTrue($GreaterOrEqual(2, 2));
 		$this->assertTrue($GreaterOrEqual(4, 2));
 	}
+	
+	
+
+	/**
+	 *
+	 */
+	public function testIdentity() {
+		$Identity = new Identity();
+		$this->assertEquals(2, $Identity(2));
+		$this->assertEquals(4, $Identity(4, 2, 'foo'));
+	}
+
+
+	/**
+	 *
+	 */
+	public function testAlwaysTrue() {
+		$AlwaysTrue = new AlwaysTrue();
+		$this->assertTrue($AlwaysTrue(2));
+		$this->assertTrue($AlwaysTrue(4, 2, 'foo'));
+	}
+	
+	
+	/**
+	 *
+	 */
+	public function testAlwaysFalse() {
+		$AlwaysFalse = new AlwaysFalse();
+		$this->assertFalse($AlwaysFalse(2));
+		$this->assertFalse($AlwaysFalse(4, 2, 'foo'));
+	}
 }
