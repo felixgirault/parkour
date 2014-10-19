@@ -8,6 +8,8 @@ namespace Parkour;
 
 use Parkour\Functor\Conjunct;
 use Parkour\Functor\Disjunct;
+use Parkour\Functor\Identity;
+use Parkour\Functor\AlwaysTrue;
 
 
 
@@ -24,11 +26,7 @@ class Parkour {
 	 *	@return array Mapped data.
 	 */
 	public static function map(array $data, callable $map) {
-		$test = function() {
-			return true;
-		};
-		
-		return self::filterMap($data, $test, $map);
+		return self::filterMap($data, new AlwaysTrue(), $map);
 	}
 
 
@@ -42,10 +40,7 @@ class Parkour {
 	 *	@return mixed Result.
 	 */
 	public static function reduce(array $data, callable $reduce, $memo = null) {
-		$map = function ($value) {
-			return $value;
-		};
-		return self::mapReduce($data, $map, $reduce, $memo);
+		return self::mapReduce($data, new Identity(), $reduce, $memo);
 	}
 
 
@@ -178,10 +173,7 @@ class Parkour {
 		if (defined('ARRAY_FILTER_USE_BOTH')) {
 			return array_filter($data, $test, ARRAY_FILTER_USE_BOTH);
 		} else {
-			$map = function ($value) {
-				return $value;
-			};
-			return self::filterMap($data, $test, $map);
+			return self::filterMap($data, $test, new Identity());
 		}
 
 	}
