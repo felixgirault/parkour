@@ -87,7 +87,7 @@ class Parkour {
 		$mapped = [];
 
 		foreach ($data as $key => $value) {
-			if ($test($value, $key)) {
+			if (call_user_func($test, $value, $key)) {
 				$mapped[$key] = call_user_func($map, $value, $key);
 			}
 		}
