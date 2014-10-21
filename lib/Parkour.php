@@ -63,8 +63,8 @@ class Parkour {
 		$memo = null
 	) {
 		foreach ($data as $key => $value) {
-			$mapped = $map($value, $key);
-			$memo = $reduce($memo, $mapped, $key);
+			$mapped = call_user_func($map, $value, $key);
+			$memo = call_user_func($reduce, $memo, $mapped, $key);
 		}
 
 		return $memo;
@@ -88,7 +88,7 @@ class Parkour {
 
 		foreach ($data as $key => $value) {
 			if ($test($value, $key)) {
-				$mapped[$key] = $map($value, $key);
+				$mapped[$key] = call_user_func($map, $value, $key);
 			}
 		}
 
@@ -134,7 +134,7 @@ class Parkour {
 	 */
 	public static function firstOk(array $data, callable $test) {
 		foreach ($data as $key => $value) {
-			if ($test($value, $key)) {
+			if (call_user_func($test, $value, $key)) {
 				return $key;
 			}
 		}
@@ -154,7 +154,7 @@ class Parkour {
 	 */
 	public static function firstNotOk(array $data, callable $test) {
 		foreach ($data as $key => $value) {
-			if (!$test($value, $key)) {
+			if (!call_user_func($test, $value, $key)) {
 				return $key;
 			}
 		}
@@ -205,7 +205,7 @@ class Parkour {
 		$combined = [];
 
 		foreach ($data as $key => $value) {
-			$Combinator = $combine($value, $key);
+			$Combinator = call_user_func($combine, $value, $key);
 			$index = $Combinator->key();
 
 			if ($overwrite || !isset($combined[$index])) {
