@@ -16,19 +16,35 @@ API
 use Parkour\Parkour as _;
 ```
 
-[map()](#map),
-[reduce()](#reduce),
-[mapReduce()](#mapreduce),
-[every()](#every),
-[some()](#some),
-[firstOk()](#firstok),
-[firstNotOk()](#firstnotok),
-[filter()](#filter),
-[passing()](#passing),
-[combine()](#combine),
 [each()](#each),
+[map()](#map),
+[mapKeys()](#mapKeys),
+[filter()](#filter),
+[reject()](#reject),
+[reduce()](#reduce),
+[find()](#find),
+[findKey()](#findKey),
+[some()](#some),
+[every()](#every),
+[combine()](#combine),
+[normalize()](#normalize),
 [reindex()](#reindex),
-[normalize()](#normalize).
+[merge()](#merge),
+[range()](#range),
+[has()](#has),
+[get()](#get),
+[set()](#set),
+[update()](#update).
+
+### each()
+
+```php
+_::each(['foo' => 'bar'], function($value, $key) {
+	echo "$key: $value";
+});
+
+// foo: bar
+```
 
 ### map()
 
@@ -38,6 +54,46 @@ _::map([1, 2], function($value, $key) {
 });
 
 // [2, 4]
+```
+
+### mapKeys()
+
+```php
+_::mapKeys([1, 2], function($value, $key) {
+	return "key-$key";
+});
+
+// ['key-0' => 2, 'key-1' => 4]
+```
+
+### filter()
+
+```php
+$data = [
+	'a' => 1,
+	'b' => 2
+];
+
+_::filter($data, function($value, $key) {
+	return $value === 1;
+});
+
+// ['a' => 1]
+```
+
+### reject()
+
+```php
+$data = [
+	'a' => 1,
+	'b' => 2
+];
+
+_::reject($data, function($value, $key) {
+	return $value === 1;
+});
+
+// ['b' => 2]
 ```
 
 ### reduce()
@@ -58,36 +114,24 @@ _::reduce([2, 2], new Parkour\Functor\Mutiply(), 2);
 // 8
 ```
 
-### mapReduce()
+### find()
 
 ```php
-$map = function($value, $key) {
-	return $value * 2;
-};
+_::find([1, 2], function($value, $key) {
+	return $key === 1;
+});
 
-$reduce = function($memo, $value, $key) {
-	return $memo + $value;
-};
-
-_::mapReduce([1, 2], $map, $reduce, 0);
-
-// 6
+// 2
 ```
 
-### every()
+### findKey()
 
 ```php
-_::every([1, 2], function($value, $key) {
-	return $value === 1;
+_::findKey([1, 2], function($value, $key) {
+	return $value === 2;
 });
 
-// false
-
-_::every([1, 2], function($value, $key) {
-	return true;
-});
-
-// true
+// 1
 ```
 
 ### some()
@@ -106,59 +150,20 @@ _::some([1, 2], function($value, $key) {
 // true
 ```
 
-### firstOk()
+### every()
 
 ```php
-$data = [
-	'a' => 1,
-	'b' => 2
-];
+_::every([1, 2], function($value, $key) {
+	return $value === 1;
+});
 
-_::firstOk($data, function($value, $key) {
+// false
+
+_::every([1, 2], function($value, $key) {
 	return true;
 });
 
-// 'a'
-```
-
-### firstNotOk()
-
-```php
-$data = [
-	'a' => 1,
-	'b' => 2
-];
-
-_::firstOk($data, function($value, $key) {
-	return false;
-});
-
-// 'a'
-```
-
-### filter()
-
-```php
-$data = [
-	'a' => 1,
-	'b' => 2
-];
-
-_::filter($data, function($value, $key) {
-	return $value === 1;
-});
-
-// ['a' => 1]
-```
-
-### passing()
-
-```php
-_::passing([1, 2], function($value, $key) {
-	return $value === 1;
-});
-
-// [1]
+// true
 ```
 
 ### combine()
@@ -176,14 +181,17 @@ _::combine($data, function($row, $key) {
 // [1 => 'foo', 2 => 'bar']
 ```
 
-### each()
+### normalize()
 
 ```php
-_::each(['foo' => 'bar'], function($value, $key) {
-	echo "$key: $value";
-});
+$data = [
+	'foo' => 'bar'
+	'baz'
+];
 
-// foo: bar
+_::normalize($data, true);
+
+// ['foo' => 'bar', 'baz' => true]
 ```
 
 ### reindex()
@@ -196,17 +204,4 @@ _::reindex($data, [
 ]);
 
 // ['baz' => 'bar']
-```
-
-### normalize()
-
-```php
-$data = [
-	'foo' => 'bar'
-	'baz'
-];
-
-_::normalize($data, true);
-
-// ['foo' => 'bar', 'baz' => true]
 ```

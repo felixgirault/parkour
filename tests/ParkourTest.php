@@ -26,7 +26,7 @@ class ParkourTest extends TestCase {
 	 *	@param int $calls Number of expected calls.
 	 *	@return Closure Closure.
 	 */
-	public function closure(array $values, $calls = null) {
+	private function closure(array $values, $calls = null) {
 		if ($calls === null) {
 			$calls = count($values);
 		}
@@ -50,7 +50,35 @@ class ParkourTest extends TestCase {
 		return $Method->getClosure($Mock);
 	}
 
+	/**
+	 *
+	 */
+	private function aggregate($generator) {
+		$data = [];
 
+		foreach ($generator as $value) {
+			$data[] = $value;
+		}
+
+		return $data;
+	}
+
+	/**
+	 *
+	 */
+	public function testEach() {
+		$data = [
+			'a' => 1,
+			'b' => 2
+		];
+
+		$closure = $this->closure([
+			[1, 'a', null],
+			[2, 'b', null]
+		]);
+
+		Parkour::each($data, $closure);
+	}
 
 	/**
 	 *
@@ -77,170 +105,30 @@ class ParkourTest extends TestCase {
 		);
 	}
 
-
-
 	/**
 	 *
 	 */
-	public function testReduce() {
-		$data = [1, 2];
+	public function testMapKeys() {
+		$data = [
+			'a' => 1,
+			'b' => 2
+		];
 
 		$closure = $this->closure([
-			[0, 1, 0, 1],
-			[1, 2, 1, 3]
+			[1, 'a', 'c'],
+			[2, 'b', 'd']
 		]);
 
-		$expected = 3;
+		$expected = [
+			'c' => 1,
+			'd' => 2
+		];
 
 		$this->assertEquals(
 			$expected,
-			Parkour::reduce($data, $closure, 0)
+			Parkour::mapKeys($data, $closure)
 		);
 	}
-
-
-
-	/**
-	 *
-	 */
-	public function testMapReduce() {
-		$data = [1, 2];
-
-		$mapper = $this->closure([
-			[1, 0, 2],
-			[2, 1, 4]
-		]);
-
-		$reducer = $this->closure([
-			[2, 2, 0, 4],
-			[4, 4, 1, 8]
-		]);
-
-		$expected = 8;
-
-		$this->assertEquals(
-			$expected,
-			Parkour::mapReduce($data, $mapper, $reducer, 2)
-		);
-	}
-	
-	/**
-	 * 
-	 */ 
-	public function testFilterMap() {
-		$data = [1, 2, 3];
-
-		$mapper = $this->closure([
-			[1, 0, 2],
-			[3, 2, 6]
-		]);
-		
-		$tester = $this->closure([
-			[1, 0, true],
-			[2, 1, false],
-			[3, 2, true]
-		]);
-		
-		$expected = [0 => 2, 2 => 6];
-		
-		$this->assertEquals(
-			$expected,
-			Parkour::filterMap($data, $tester, $mapper)
-		);
-	}
-
-
-	/**
-	 *
-	 */
-	public function testEvery() {
-		$data = [1, 2];
-
-		$closure = $this->closure([
-			[1, 0, false],
-			[2, 1, true]
-		]);
-
-		$this->assertFalse(Parkour::every($data, $closure));
-
-		$closure = $this->closure([
-			[1, 0, true],
-			[2, 1, true]
-		]);
-
-		$this->assertTrue(Parkour::every($data, $closure));
-	}
-
-
-
-	/**
-	 *
-	 */
-	public function testSome() {
-		$data = [1, 2];
-
-		$closure = $this->closure([
-			[1, 0, false],
-			[2, 1, false]
-		]);
-
-		$this->assertFalse(Parkour::some($data, $closure));
-
-		$closure = $this->closure([
-			[1, 0, true],
-			[2, 1, false]
-		]);
-
-		$this->assertTrue(Parkour::some($data, $closure));
-	}
-
-
-
-	/**
-	 *
-	 */
-	public function testFirstOk() {
-		$data = [1, 2];
-
-		$closure = $this->closure([
-			[1, 0, false],
-			[2, 1, false]
-		]);
-
-		$this->assertFalse(Parkour::firstOk($data, $closure));
-
-		$closure = $this->closure([
-			[1, 0, true],
-			[2, 1, false]
-		], 1);
-
-		$this->assertEquals(0, Parkour::firstOk($data, $closure));
-	}
-
-
-
-	/**
-	 *
-	 */
-	public function testFirstNotOk() {
-		$data = [1, 2];
-
-		$closure = $this->closure([
-			[1, 0, true],
-			[2, 1, true]
-		]);
-
-		$this->assertFalse(Parkour::firstNotOk($data, $closure));
-
-		$closure = $this->closure([
-			[1, 0, false],
-			[2, 1, true]
-		], 1);
-
-		$this->assertEquals(0, Parkour::firstNotOk($data, $closure));
-	}
-
-
 
 	/**
 	 *
@@ -266,12 +154,10 @@ class ParkourTest extends TestCase {
 		);
 	}
 
-
-
 	/**
 	 *
 	 */
-	public function testPassing() {
+	public function testOwnFilter() {
 		$data = [
 			'a' => 1,
 			'b' => 2
@@ -282,15 +168,98 @@ class ParkourTest extends TestCase {
 			[2, 'b', true]
 		]);
 
-		$expected = [2];
+		$expected = [
+			'b' => 2
+		];
 
 		$this->assertEquals(
 			$expected,
-			Parkour::passing($data, $closure, false)
+			Parkour::ownFilter($data, $closure)
 		);
 	}
 
+	/**
+	 *
+	 */
+	public function testReject() {
+		$data = [
+			'a' => 1,
+			'b' => 2
+		];
 
+		$closure = $this->closure([
+			[1, 'a', false],
+			[2, 'b', true]
+		]);
+
+		$expected = [
+			'a' => 1
+		];
+
+		$this->assertEquals(
+			$expected,
+			Parkour::reject($data, $closure)
+		);
+	}
+
+	/**
+	 *
+	 */
+	public function testReduce() {
+		$data = [1, 2];
+
+		$closure = $this->closure([
+			[0, 1, 0, 1],
+			[1, 2, 1, 3]
+		]);
+
+		$expected = 3;
+
+		$this->assertEquals(
+			$expected,
+			Parkour::reduce($data, $closure, 0)
+		);
+	}
+
+	/**
+	 *
+	 */
+	public function testSome() {
+		$data = [1, 2];
+
+		$closure = $this->closure([
+			[1, 0, false],
+			[2, 1, false]
+		]);
+
+		$this->assertFalse(Parkour::some($data, $closure));
+
+		$closure = $this->closure([
+			[1, 0, true]
+		]);
+
+		$this->assertTrue(Parkour::some($data, $closure));
+	}
+
+	/**
+	 *
+	 */
+	public function testEvery() {
+		$data = [1, 2];
+
+		$closure = $this->closure([
+			[1, 0, false]
+		]);
+
+		$this->assertFalse(Parkour::every($data, $closure));
+
+		$closure = $this->closure([
+			[1, 0, true],
+			[2, 1, true]
+		]);
+
+		$this->assertTrue(Parkour::every($data, $closure));
+	}
 
 	/**
 	 *
@@ -329,26 +298,29 @@ class ParkourTest extends TestCase {
 		);
 	}
 
-
-
 	/**
 	 *
 	 */
-	public function testEach() {
+	public function testNormalize() {
 		$data = [
-			'a' => 1,
-			'b' => 2
+			'one',
+			'two' => 'three',
+			'four'
 		];
 
-		$closure = $this->closure([
-			[1, 'a', null],
-			[2, 'b', null]
-		]);
+		$default = 'default';
 
-		Parkour::each($data, $closure);
+		$expected = [
+			'one' => $default,
+			'two' => 'three',
+			'four' => $default
+		];
+
+		$this->assertEquals(
+			$expected,
+			Parkour::normalize($data, $default)
+		);
 	}
-
-
 
 	/**
 	 *
@@ -375,76 +347,220 @@ class ParkourTest extends TestCase {
 		);
 	}
 
-
-
 	/**
 	 *
 	 */
-	public function testNormalize() {
-		$data = [
-			'one',
-			'two' => 'three',
-			'four'
+	public function testMerge() {
+		$first = [
+			'one' => 1,
+			'two' => 2,
+			'three' => [
+				'four' => 4,
+				'five' => 5
+			]
 		];
 
-		$default = 'default';
+		$second = [
+			'two' => 'two',
+			'three' => [
+				'four' => 'four'
+			]
+		];
 
 		$expected = [
-			'one' => $default,
-			'two' => 'three',
-			'four' => $default
+			'one' => 1,
+			'two' => 'two',
+			'three' => [
+				'four' => 'four',
+				'five' => 5
+			]
 		];
 
 		$this->assertEquals(
 			$expected,
-			Parkour::normalize($data, $default)
+			Parkour::merge($first, $second)
 		);
 	}
-
-
 
 	/**
 	 *
 	 */
 	public function testRange() {
-		$result = [];
+		$this->assertEquals(
+			[0, 1, 2, 3, 4],
+			$this->aggregate(Parkour::range(0, 5))
+		);
 
-		foreach (Parkour::range(0, 5) as $i) {
-			$result[] = $i;
-		}
+		$this->assertEquals(
+			[2, 4, 6],
+			$this->aggregate(Parkour::range(2, 7, 2))
+		);
 
-		$this->assertEquals([0, 1, 2, 3, 4], $result);
+		$this->assertEquals(
+			[],
+			$this->aggregate(Parkour::range(10, 2))
+		);
 
-		$result = [];
+		$this->assertEquals(
+			[10, 8, 6],
+			$this->aggregate(Parkour::range(10, 5, -2))
+		);
 
-		foreach (Parkour::range(2, 7, 2) as $i) {
-			$result[] = $i;
-		}
+		$this->assertEquals(
+			[-4, -3],
+			$this->aggregate(Parkour::range(-4, -2))
+		);
+	}
 
-		$this->assertEquals([2, 4, 6], $result);
+	/**
+	 *
+	 */
+	public function testHas() {
+		$data = [
+			'a' => 1,
+			'b' => [
+				'c' => 2,
+				'd' => [
+					'e' => 3
+				]
+			]
+		];
 
-		$result = [];
+		$this->assertTrue(Parkour::has($data, 'a'));
+		$this->assertTrue(Parkour::has($data, 'b.d.e'));
+		$this->assertFalse(Parkour::has($data, 'a.b.c'));
+	}
 
-		foreach (Parkour::range(10, 2) as $i) {
-			$result[] = $i;
-		}
+	/**
+	 *
+	 */
+	public function testGet() {
+		$data = [
+			'a' => 1,
+			'b' => [
+				'c' => 2,
+				'd' => [
+					'e' => 3
+				]
+			]
+		];
 
-		$this->assertEquals([], $result);
+		$this->assertNull(Parkour::get($data, 'a.b.c'));
+		$this->assertEquals(1, Parkour::get($data, 'a'));
+		$this->assertEquals(3, Parkour::get($data, 'b.d.e'));
+		$this->assertEquals('z', Parkour::get($data, 'a.b.c', 'z'));
+	}
 
-		$result = [];
+	/**
+	 *
+	 */
+	public function testSet() {
+		$data = [
+			'a' => 1,
+			'b' => [
+				'c' => 2,
+				'd' => [
+					'e' => 3
+				]
+			]
+		];
 
-		foreach (Parkour::range(10, 5, -2) as $i) {
-			$result[] = $i;
-		}
+		$expected = [
+			'a' => 'a',
+			'b' => [
+				'c' => 2,
+				'd' => [
+					'e' => 'e'
+				],
+				'f' => [
+					'g' => 'g'
+				]
+			]
+		];
 
-		$this->assertEquals([10, 8, 6], $result);
+		$result = Parkour::set($data, 'a', 'a');
+		$result = Parkour::set($result, 'b.d.e', 'e');
+		$result = Parkour::set($result, 'b.f.g', 'g');
 
-		$result = [];
+		$this->assertEquals($expected, $result);
+	}
 
-		foreach (Parkour::range(-4, -2) as $i) {
-			$result[] = $i;
-		}
+	/**
+	 *
+	 */
+	public function testUpdate() {
+		$data = [
+			'a' => 1,
+			'b' => [
+				'c' => 2,
+				'd' => [
+					'e' => 3
+				]
+			]
+		];
 
-		$this->assertEquals([-4, -3], $result);
+		$expected = [
+			'a' => 2,
+			'b' => [
+				'c' => 2,
+				'd' => [
+					'e' => 4
+				]
+			]
+		];
+
+		$increment = function($value) {
+			return $value + 1;
+		};
+
+		$result = Parkour::update($data, 'a', $increment);
+		$result = Parkour::update($result, 'z', $increment);
+		$result = Parkour::update($result, 'b.d.e', $increment);
+
+		$this->assertEquals($expected, $result);
+	}
+
+	/**
+	 *
+	 */
+	public function testSplitPath() {
+		$this->assertEquals(
+			['a', 'b'],
+			Parkour::splitPath(['a', 'b'])
+		);
+	}
+
+	/**
+	 *
+	 */
+	public function testSplitDottedPath() {
+		$this->assertEquals(
+			['a', 'b'],
+			Parkour::splitPath('a.b')
+		);
+	}
+
+	/**
+	 *
+	 */
+	public function testSplitEmptyPath() {
+		$this->setExpectedException('InvalidArgumentException');
+		Parkour::splitPath([]);
+	}
+
+	/**
+	 *
+	 */
+	public function testSplitEmptyDottedPath() {
+		$this->setExpectedException('InvalidArgumentException');
+		Parkour::splitPath('');
+	}
+
+	/**
+	 *
+	 */
+	public function testSplitInvalidPath() {
+		$this->setExpectedException('InvalidArgumentException');
+		Parkour::splitPath(12);
 	}
 }

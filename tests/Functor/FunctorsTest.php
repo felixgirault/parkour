@@ -23,37 +23,23 @@ class FunctorsTest extends TestCase {
 		$this->assertEquals(4, $Add(2, 2));
 	}
 
-
+	/**
+	 *
+	 */
+	public function testAlwaysFalse() {
+		$AlwaysFalse = new AlwaysFalse();
+		$this->assertFalse($AlwaysFalse(2));
+		$this->assertFalse($AlwaysFalse(4, 2, 'foo'));
+	}
 
 	/**
 	 *
 	 */
-	public function testSubstract() {
-		$Substract = new Substract();
-		$this->assertEquals(2, $Substract(4, 2));
+	public function testAlwaysTrue() {
+		$AlwaysTrue = new AlwaysTrue();
+		$this->assertTrue($AlwaysTrue(2));
+		$this->assertTrue($AlwaysTrue(4, 2, 'foo'));
 	}
-
-
-
-	/**
-	 *
-	 */
-	public function testMultiply() {
-		$Multiply = new Multiply();
-		$this->assertEquals(4, $Multiply(2, 2));
-	}
-
-
-
-	/**
-	 *
-	 */
-	public function testDivide() {
-		$Divide = new Divide();
-		$this->assertEquals(2, $Divide(4, 2));
-	}
-
-
 
 	/**
 	 *
@@ -63,8 +49,6 @@ class FunctorsTest extends TestCase {
 		$this->assertFalse($Conjunct(true, false));
 	}
 
-
-
 	/**
 	 *
 	 */
@@ -73,7 +57,13 @@ class FunctorsTest extends TestCase {
 		$this->assertTrue($Disjunct(true, false));
 	}
 
-
+	/**
+	 *
+	 */
+	public function testDivide() {
+		$Divide = new Divide();
+		$this->assertEquals(2, $Divide(4, 2));
+	}
 
 	/**
 	 *
@@ -83,48 +73,6 @@ class FunctorsTest extends TestCase {
 		$this->assertTrue($Equal('2', 2));
 	}
 
-
-
-	/**
-	 *
-	 */
-	public function testNotEqual() {
-		$NotEqual = new NotEqual();
-		$this->assertTrue($NotEqual(4, 2));
-	}
-
-
-
-	/**
-	 *
-	 */
-	public function testIdentical() {
-		$Identical = new Identical();
-		$this->assertTrue($Identical(2, 2));
-	}
-
-
-
-	/**
-	 *
-	 */
-	public function testNotIdentical() {
-		$NotIdentical = new NotIdentical();
-		$this->assertTrue($NotIdentical('2', 2));
-	}
-
-
-
-	/**
-	 *
-	 */
-	public function testLower() {
-		$Lower = new Lower();
-		$this->assertTrue($Lower(2, 4));
-	}
-
-
-
 	/**
 	 *
 	 */
@@ -132,19 +80,6 @@ class FunctorsTest extends TestCase {
 		$Greater = new Greater();
 		$this->assertTrue($Greater(4, 2));
 	}
-
-
-
-	/**
-	 *
-	 */
-	public function testLowerOrEqual() {
-		$LowerOrEqual = new LowerOrEqual();
-		$this->assertTrue($LowerOrEqual(2, 2));
-		$this->assertTrue($LowerOrEqual(2, 4));
-	}
-
-
 
 	/**
 	 *
@@ -154,8 +89,14 @@ class FunctorsTest extends TestCase {
 		$this->assertTrue($GreaterOrEqual(2, 2));
 		$this->assertTrue($GreaterOrEqual(4, 2));
 	}
-	
-	
+
+	/**
+	 *
+	 */
+	public function testIdentical() {
+		$Identical = new Identical();
+		$this->assertTrue($Identical(2, 2));
+	}
 
 	/**
 	 *
@@ -166,23 +107,52 @@ class FunctorsTest extends TestCase {
 		$this->assertEquals(4, $Identity(4, 2, 'foo'));
 	}
 
+	/**
+	 *
+	 */
+	public function testLower() {
+		$Lower = new Lower();
+		$this->assertTrue($Lower(2, 4));
+	}
 
 	/**
 	 *
 	 */
-	public function testAlwaysTrue() {
-		$AlwaysTrue = new AlwaysTrue();
-		$this->assertTrue($AlwaysTrue(2));
-		$this->assertTrue($AlwaysTrue(4, 2, 'foo'));
+	public function testLowerOrEqual() {
+		$LowerOrEqual = new LowerOrEqual();
+		$this->assertTrue($LowerOrEqual(2, 2));
+		$this->assertTrue($LowerOrEqual(2, 4));
 	}
-	
-	
+
 	/**
 	 *
 	 */
-	public function testAlwaysFalse() {
-		$AlwaysFalse = new AlwaysFalse();
-		$this->assertFalse($AlwaysFalse(2));
-		$this->assertFalse($AlwaysFalse(4, 2, 'foo'));
+	public function testMultiply() {
+		$Multiply = new Multiply();
+		$this->assertEquals(4, $Multiply(2, 2));
+	}
+
+	/**
+	 *
+	 */
+	public function testNotEqual() {
+		$NotEqual = new NotEqual();
+		$this->assertTrue($NotEqual(4, 2));
+	}
+
+	/**
+	 *
+	 */
+	public function testNotIdentical() {
+		$NotIdentical = new NotIdentical();
+		$this->assertTrue($NotIdentical('2', 2));
+	}
+
+	/**
+	 *
+	 */
+	public function testSubstract() {
+		$Substract = new Substract();
+		$this->assertEquals(2, $Substract(4, 2));
 	}
 }
