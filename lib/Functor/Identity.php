@@ -16,8 +16,8 @@ class Identity {
 	/**
 	 *	Returns its first parameter.
 	 *
-	 *	@param mixed $value.
-	 *	@return mixed $value
+	 *	@param mixed $value Value.
+	 *	@return mixed $value Value.
 	 */
 	public function __invoke($value) {
 		return $value;
