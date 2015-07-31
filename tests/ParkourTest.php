@@ -8,6 +8,8 @@ namespace Parkour;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use PHPUnit_Framework_MockObject_Matcher_ConsecutiveParameters as ConsecutiveParameters;
+use Parkour\Functor\Equal;
+use Parkour\Functor\Identity;
 use ReflectionClass;
 
 
@@ -181,6 +183,16 @@ class ParkourTest extends TestCase {
 	/**
 	 *
 	 */
+	public function testOwnFilterUnkeyed() {
+		$this->assertEquals(
+			[2],
+			Parkour::filter([1, 2], new Equal(2), false)
+		);
+	}
+
+	/**
+	 *
+	 */
 	public function testReject() {
 		$data = [
 			'a' => 1,
@@ -243,6 +255,16 @@ class ParkourTest extends TestCase {
 	/**
 	 *
 	 */
+	public function testFindDefault() {
+		$this->assertEquals(
+			'default',
+			Parkour::find([], function() {}, 'default')
+		);
+	}
+
+	/**
+	 *
+	 */
 	public function testFindKey() {
 		$data = [1, 2];
 
@@ -256,6 +278,16 @@ class ParkourTest extends TestCase {
 		$this->assertEquals(
 			$expected,
 			Parkour::findKey($data, $closure)
+		);
+	}
+
+	/**
+	 *
+	 */
+	public function testFindKeyDefault() {
+		$this->assertEquals(
+			'default',
+			Parkour::findKey([], new Identity(), 'default')
 		);
 	}
 
@@ -519,6 +551,7 @@ class ParkourTest extends TestCase {
 		$result = Parkour::set($data, 'a', 'a');
 		$result = Parkour::set($result, 'b.d.e', 'e');
 		$result = Parkour::set($result, 'b.f.g', 'g');
+		$result = Parkour::set($result, 'a.z', 'z');
 
 		$this->assertEquals($expected, $result);
 	}
