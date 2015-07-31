@@ -224,6 +224,44 @@ class ParkourTest extends TestCase {
 	/**
 	 *
 	 */
+	public function testFind() {
+		$data = [1, 2];
+
+		$closure = $this->closure([
+			[1, 0, false],
+			[2, 1, true]
+		]);
+
+		$expected = 2;
+
+		$this->assertEquals(
+			$expected,
+			Parkour::find($data, $closure)
+		);
+	}
+
+	/**
+	 *
+	 */
+	public function testFindKey() {
+		$data = [1, 2];
+
+		$closure = $this->closure([
+			[1, 0, false],
+			[2, 1, true]
+		]);
+
+		$expected = 1;
+
+		$this->assertEquals(
+			$expected,
+			Parkour::findKey($data, $closure)
+		);
+	}
+
+	/**
+	 *
+	 */
 	public function testSome() {
 		$data = [1, 2];
 
