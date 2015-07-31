@@ -9,12 +9,35 @@ A collection of utilities to manipulate arrays.
 
 The aim of this library is to provide a consistent API, unlike the one natively implemented in PHP.
 
-API
----
+Examples
+--------
+
+Using your own functions:
 
 ```php
-use Parkour\Parkour as _;
+Parkour::filter([5, 15, 20], function($value) {
+	return $value > 10;
+});
+
+// [15, 20]
 ```
+
+Using some of the built-in functors:
+
+```php
+Parkour::filter([5, 15, 20], new Parkour\Functor\Greater(10));
+// [15, 20]
+
+Parkour::map([10, 20], new Parkour\Functor\Multiply(2), 0);
+// [20, 40]
+
+Parkour::reduce([10, 20], new Parkour\Functor\Add(), 0);
+// 30
+
+```
+
+API
+---
 
 [each()](#each),
 [map()](#map),
@@ -39,7 +62,7 @@ use Parkour\Parkour as _;
 ### each()
 
 ```php
-_::each(['foo' => 'bar'], function($value, $key) {
+Parkour::each(['foo' => 'bar'], function($value, $key) {
 	echo "$key: $value";
 });
 
@@ -49,101 +72,131 @@ _::each(['foo' => 'bar'], function($value, $key) {
 ### map()
 
 ```php
-_::map([1, 2], function($value, $key) {
+$data = [
+	'foo' => 1,
+	'bar' => 2
+];
+
+Parkour::map($data, function($value, $key) {
 	return $value * 2;
 });
 
-// [2, 4]
+// [
+// 	'foo' => 2,
+// 	'bar' => 4
+// ]
 ```
 
 ### mapKeys()
 
 ```php
-_::mapKeys([1, 2], function($value, $key) {
-	return "key-$key";
+$data = [
+	'foo' => 1,
+	'bar' => 2
+];
+
+Parkour::map($data, function($value, $key) {
+	return strtoupper($key);
 });
 
-// ['key-0' => 2, 'key-1' => 4]
+// [
+// 	'FOO' => 1,
+// 	'BAR' => 2
+// ]
 ```
 
 ### filter()
 
 ```php
 $data = [
-	'a' => 1,
-	'b' => 2
+	'foo' => true,
+	'bar' => false
 ];
 
-_::filter($data, function($value, $key) {
-	return $value === 1;
+Parkour::filter($data, function($value, $key) {
+	return $value === true;
 });
 
-// ['a' => 1]
+// [
+// 	'foo' => true
+// ]
 ```
 
 ### reject()
 
 ```php
 $data = [
-	'a' => 1,
-	'b' => 2
+	'foo' => true,
+	'bar' => false
 ];
 
-_::reject($data, function($value, $key) {
-	return $value === 1;
+Parkour::reject($data, function($value, $key) {
+	return $value === true;
 });
 
-// ['b' => 2]
+// [
+// 	'bar' => false
+// ]
 ```
 
 ### reduce()
 
 ```php
-_::reduce([1, 2], function($memo, $value, $key) {
+Parkour::reduce([1, 2], function($memo, $value, $key) {
 	return $memo + $value;
 }, 0);
 
 // 3
+```
 
-_::reduce([1, 2], new Parkour\Functor\Add(), 0);
+Using built-in functors:
 
-// 3
-
-_::reduce([2, 2], new Parkour\Functor\Mutiply(), 2);
-
-// 8
+```php
+Parkour::reduce([1, 2], new Parkour\Functor\Add(), 0); // 3
+Parkour::reduce([2, 2], new Parkour\Functor\Mutiply(), 2); // 8
 ```
 
 ### find()
 
 ```php
-_::find([1, 2], function($value, $key) {
-	return $key === 1;
+$data = [
+	'foo' => 'PHP',
+	'bar' => 'JavaScript'
+];
+
+Parkour::find($data, function($value, $key) {
+	return $key === 'foo';
 });
 
-// 2
+// 'PHP'
 ```
 
 ### findKey()
 
 ```php
-_::findKey([1, 2], function($value, $key) {
-	return $value === 2;
+$data = [
+	'foo' => 'PHP',
+	'bar' => 'JavaScript'
+];
+
+Parkour::findKey($data, function($value, $key) {
+	return $value === 'PHP';
 });
 
-// 1
+// 'foo'
 ```
 
 ### some()
 
 ```php
-_::some([1, 2], function($value, $key) {
-	return false;
+Parkour::some([5, 10, 20], function($value, $key) {
+	return $value > 10;
 });
 
-// false
+// true
+```
 
-_::some([1, 2], function($value, $key) {
+Parkour::some([1, 2], function($value, $key) {
 	return $value === 1;
 });
 
@@ -153,13 +206,13 @@ _::some([1, 2], function($value, $key) {
 ### every()
 
 ```php
-_::every([1, 2], function($value, $key) {
+Parkour::every([1, 2], function($value, $key) {
 	return $value === 1;
 });
 
 // false
 
-_::every([1, 2], function($value, $key) {
+Parkour::every([1, 2], function($value, $key) {
 	return true;
 });
 
@@ -170,15 +223,18 @@ _::every([1, 2], function($value, $key) {
 
 ```php
 $data = [
-	['key' => 1, 'value' => 'foo'],
-	['key' => 2, 'value' => 'bar']
+	['id' => 12, 'name' => 'foo'],
+	['id' => 37, 'name' => 'bar']
 ];
 
-_::combine($data, function($row, $key) {
-	yield $row['key'] => $row['value'];
+Parkour::combine($data, function($row, $key) {
+	yield $row['id'] => $row['name'];
 });
 
-// [1 => 'foo', 2 => 'bar']
+// [
+// 	12 => 'foo',
+// 	37 => 'bar'
+// ]
 ```
 
 ### normalize()
@@ -189,9 +245,12 @@ $data = [
 	'baz'
 ];
 
-_::normalize($data, true);
+Parkour::normalize($data, true);
 
-// ['foo' => 'bar', 'baz' => true]
+// [
+// 	'foo' => 'bar',
+// 	'baz' => true
+// ]
 ```
 
 ### reindex()
@@ -199,9 +258,177 @@ _::normalize($data, true);
 ```php
 $data = ['foo' => 'bar'];
 
-_::reindex($data, [
+Parkour::reindex($data, [
 	'foo' => 'baz'
 ]);
 
-// ['baz' => 'bar']
+// [
+// 	'baz' => 'bar'
+// ]
+```
+
+### merge()
+
+```php
+$first = [
+	'one' => 1,
+	'two' => 2,
+	'three' => [
+		'four' => 4,
+		'five' => 5
+	]
+];
+
+$second = [
+	'two' => 'two',
+	'three' => [
+		'four' => 'four'
+	]
+];
+
+Parkour::merge($first, $second);
+
+// [
+// 	'one' => 1,
+// 	'two' => 'two',
+// 	'three' => [
+// 		'four' => 'four',
+// 		'five' => 5
+// 	]
+// ]
+```
+
+### range()
+
+```php
+$range = Parkour::range(0, 5);
+
+foreach ($range as $number) {
+	echo $number;
+}
+
+// 012345
+```
+
+### has()
+
+```php
+$data = [
+	'a' => 'foo',
+	'b' => [
+		'c' => 'bar'
+	]
+];
+
+Parkour::has($data, 'b.c'); // true
+Parkour::has($data, ['b', 'c']); // true
+```
+
+### get()
+
+```php
+$data = [
+	'a' => 'foo',
+	'b' => [
+		'c' => 'bar'
+	]
+];
+
+Parkour::get($data, 'a'); // 'foo'
+Parkour::get($data, 'b.c'); // 'bar'
+Parkour::get($data, ['b', 'c']); // 'bar'
+```
+
+### set()
+
+```php
+$data = [
+	'a' => 'foo',
+	'b' => [
+		'c' => 'bar'
+	]
+];
+
+$data = Parkour::set($data, 'a', 'a');
+$data = Parkour::set($data, 'b.c', 'c');
+$data = Parkour::set($data, ['b', 'd'], 'd');
+
+// [
+// 	'a' => 'a',
+// 	'b' => [
+// 		'c' => 'c',
+// 		'd' => 'd'
+// 	]
+// ]
+```
+
+### update()
+
+```php
+$data = [
+	'a' => 'foo',
+	'b' => [
+		'c' => 'bar'
+	]
+];
+
+$data = Parkour::update($data, 'a', function($value) {
+	return strtoupper($value);	
+});
+
+$data = Parkour::update($data, 'b.c', function($value) {
+	return $value . $value;
+});
+
+$data = Parkour::update($data, ['b', 'd'], 'd');
+
+// [
+// 	'a' => 'FOO',
+// 	'b' => [
+// 		'c' => 'barbar'
+// 	]
+// ]
+```
+
+Functors
+--------
+
+`Add`,
+`AlwaysFalse`,
+`AlwaysTrue`,
+`Cunjunct`,
+`Disjunct`,
+`Divide`,
+`Equal`,
+`Greater`,
+`GreaterOrEqual`,
+`Identical`,
+`Identity`,
+`Lower`,
+`LowerOrEqual`,
+`Multiply`,
+`NotEqual`,
+`NotIdentical`,
+`Substract`.
+
+The vast majority of these functors can be used in two different ways:
+
+```php
+$Add = new Parkour\Functor\Add();
+Parkour::reduce([10, 20], $Add, 0);
+
+// is equivalent to:
+Parkour::reduce([10, 20], function($memo, $value) {
+	return $memo + $value;
+}, 0);
+```
+
+```php
+$Add = new Parkour\Functor\Add(5);
+Parkour::map([10, 20], $Add, 0);
+
+// is equivalent to:
+Parkour::map([10, 20], function($value) {
+	return $value + 5;
+}, 0);
 ```
