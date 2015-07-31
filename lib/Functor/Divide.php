@@ -6,12 +6,14 @@
  */
 namespace Parkour\Functor;
 
+use Parkour\Functor;
+
 
 
 /**
  *
  */
-class Divide {
+class Divide extends Functor {
 
 	/**
 	 *	Divides two values.
@@ -20,7 +22,7 @@ class Divide {
 	 *	@param mixed $second Second value.
 	 *	@return mixed Result.
 	 */
-	public function __invoke($first, $second) {
+	public function invoke($first, $second) {
 		return $first / $second;
 	}
 }

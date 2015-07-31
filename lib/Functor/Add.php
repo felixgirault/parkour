@@ -6,12 +6,14 @@
  */
 namespace Parkour\Functor;
 
+use Parkour\Functor;
+
 
 
 /**
  *
  */
-class Add {
+class Add extends Functor {
 
 	/**
 	 *	Adds two values.
@@ -20,7 +22,7 @@ class Add {
 	 *	@param mixed $second Second value.
 	 *	@return mixed Result.
 	 */
-	public function __invoke($first, $second) {
+	protected function invoke($first, $second) {
 		return $first + $second;
 	}
 }

@@ -14,7 +14,7 @@ namespace Parkour\Functor;
 class Identity {
 
 	/**
-	 *	The identity function : returns its first parameter
+	 *	Returns its first parameter.
 	 *
 	 *	@param mixed $value.
 	 *	@return mixed $value

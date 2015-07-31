@@ -6,12 +6,14 @@
  */
 namespace Parkour\Functor;
 
+use Parkour\Functor;
+
 
 
 /**
  *
  */
-class Disjunct {
+class Disjunct extends Functor {
 
 	/**
 	 *	Calculates the disjunction of two values..
@@ -20,7 +22,7 @@ class Disjunct {
 	 *	@param mixed $second Second value.
 	 *	@return boolean Result.
 	 */
-	public function __invoke($first, $second) {
+	public function invoke($first, $second) {
 		return $first || $second;
 	}
 }

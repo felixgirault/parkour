@@ -6,12 +6,14 @@
  */
 namespace Parkour\Functor;
 
+use Parkour\Functor;
+
 
 
 /**
  *
  */
-class GreaterOrEqual {
+class GreaterOrEqual extends Functor {
 
 	/**
 	 *	Tells if the first value is greater than or equal to the second.
@@ -20,7 +22,7 @@ class GreaterOrEqual {
 	 *	@param mixed $second Second value.
 	 *	@return boolean Result.
 	 */
-	public function __invoke($first, $second) {
+	public function invoke($first, $second) {
 		return $first >= $second;
 	}
 }

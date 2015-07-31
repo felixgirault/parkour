@@ -6,12 +6,14 @@
  */
 namespace Parkour\Functor;
 
+use Parkour\Functor;
+
 
 
 /**
  *
  */
-class Multiply {
+class Multiply extends Functor {
 
 	/**
 	 *	Mutiplies two values.
@@ -20,7 +22,7 @@ class Multiply {
 	 *	@param mixed $second Second value.
 	 *	@return mixed Result.
 	 */
-	public function __invoke($first, $second) {
+	public function invoke($first, $second) {
 		return $first * $second;
 	}
 }
