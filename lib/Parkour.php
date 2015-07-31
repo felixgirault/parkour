@@ -128,7 +128,7 @@ class Parkour {
 	 *	@param mixed $memo Initial value.
 	 *	@return mixed Result.
 	 */
-	public static function reduce(array $data, callable $cb, $memo = null) {
+	public static function reduce(array $data, callable $cb, $memo) {
 		foreach ($data as $key => $value) {
 			$memo = call_user_func($cb, $memo, $value, $key);
 		}
