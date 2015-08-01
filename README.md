@@ -15,7 +15,7 @@ Examples
 Using your own functions:
 
 ```php
-Parkour::filter([5, 15, 20], function($value) {
+Parkour\Iterate::filter([5, 15, 20], function($value) {
 	return $value > 10;
 });
 
@@ -25,19 +25,25 @@ Parkour::filter([5, 15, 20], function($value) {
 Using some of the built-in functors:
 
 ```php
-Parkour::filter([5, 15, 20], new Parkour\Functor\Greater(10));
+Parkour\Iterate::filter([5, 15, 20], new Parkour\Functor\Greater(10));
 // [15, 20]
 
-Parkour::map([10, 20], new Parkour\Functor\Multiply(2), 0);
+Parkour\Iterate::map([10, 20], new Parkour\Functor\Multiply(2), 0);
 // [20, 40]
 
-Parkour::reduce([10, 20], new Parkour\Functor\Add(), 0);
+Parkour\Iterate::reduce([10, 20], new Parkour\Functor\Add(), 0);
 // 30
 
 ```
 
 API
 ---
+
+### Iterate
+
+```php
+use Parkour\Iterate;
+```
 
 [each()](#each),
 [map()](#map),
@@ -48,28 +54,19 @@ API
 [find()](#find),
 [findKey()](#findKey),
 [some()](#some),
-[every()](#every),
-[combine()](#combine),
-[normalize()](#normalize),
-[reindex()](#reindex),
-[merge()](#merge),
-[range()](#range),
-[has()](#has),
-[get()](#get),
-[set()](#set),
-[update()](#update).
+[every()](#every).
 
-### each()
+#### each()
 
 ```php
-Parkour::each(['foo' => 'bar'], function($value, $key) {
+Iterate::each(['foo' => 'bar'], function($value, $key) {
 	echo "$key: $value";
 });
 
 // foo: bar
 ```
 
-### map()
+#### map()
 
 ```php
 $data = [
@@ -77,7 +74,7 @@ $data = [
 	'bar' => 2
 ];
 
-Parkour::map($data, function($value, $key) {
+Iterate::map($data, function($value, $key) {
 	return $value * 2;
 });
 
@@ -87,7 +84,7 @@ Parkour::map($data, function($value, $key) {
 // ]
 ```
 
-### mapKeys()
+#### mapKeys()
 
 ```php
 $data = [
@@ -95,7 +92,7 @@ $data = [
 	'bar' => 2
 ];
 
-Parkour::map($data, function($value, $key) {
+Iterate::map($data, function($value, $key) {
 	return strtoupper($key);
 });
 
@@ -105,7 +102,7 @@ Parkour::map($data, function($value, $key) {
 // ]
 ```
 
-### filter()
+#### filter()
 
 ```php
 $data = [
@@ -113,7 +110,7 @@ $data = [
 	'bar' => false
 ];
 
-Parkour::filter($data, function($value, $key) {
+Iterate::filter($data, function($value, $key) {
 	return $value === true;
 });
 
@@ -122,7 +119,7 @@ Parkour::filter($data, function($value, $key) {
 // ]
 ```
 
-### reject()
+#### reject()
 
 ```php
 $data = [
@@ -130,7 +127,7 @@ $data = [
 	'bar' => false
 ];
 
-Parkour::reject($data, function($value, $key) {
+Iterate::reject($data, function($value, $key) {
 	return $value === true;
 });
 
@@ -139,10 +136,10 @@ Parkour::reject($data, function($value, $key) {
 // ]
 ```
 
-### reduce()
+#### reduce()
 
 ```php
-Parkour::reduce([1, 2], function($memo, $value, $key) {
+Iterate::reduce([1, 2], function($memo, $value, $key) {
 	return $memo + $value;
 }, 0);
 
@@ -152,11 +149,11 @@ Parkour::reduce([1, 2], function($memo, $value, $key) {
 Using built-in functors:
 
 ```php
-Parkour::reduce([1, 2], new Parkour\Functor\Add(), 0); // 3
-Parkour::reduce([2, 2], new Parkour\Functor\Mutiply(), 2); // 8
+Iterate::reduce([1, 2], new Parkour\Functor\Add(), 0); // 3
+Iterate::reduce([2, 2], new Parkour\Functor\Mutiply(), 2); // 8
 ```
 
-### find()
+#### find()
 
 ```php
 $data = [
@@ -164,14 +161,14 @@ $data = [
 	'bar' => 'JavaScript'
 ];
 
-Parkour::find($data, function($value, $key) {
+Iterate::find($data, function($value, $key) {
 	return $key === 'foo';
 });
 
 // 'PHP'
 ```
 
-### findKey()
+#### findKey()
 
 ```php
 $data = [
@@ -179,47 +176,57 @@ $data = [
 	'bar' => 'JavaScript'
 ];
 
-Parkour::findKey($data, function($value, $key) {
+Iterate::findKey($data, function($value, $key) {
 	return $value === 'PHP';
 });
 
 // 'foo'
 ```
 
-### some()
+#### some()
 
 ```php
-Parkour::some([5, 10, 20], function($value, $key) {
+Iterate::some([5, 10, 20], function($value, $key) {
 	return $value > 10;
 });
 
 // true
 ```
 
-Parkour::some([1, 2], function($value, $key) {
-	return $value === 1;
-});
-
-// true
-```
-
-### every()
+Using a built-in functor:
 
 ```php
-Parkour::every([1, 2], function($value, $key) {
+Iterate::some([1, 2], new Parkour\Functor\AlwaysFalse()); // false
+```
+
+#### every()
+
+```php
+Iterate::every([1, 2], function($value, $key) {
 	return $value === 1;
 });
 
 // false
-
-Parkour::every([1, 2], function($value, $key) {
-	return true;
-});
-
-// true
 ```
 
-### combine()
+Using a built-in functor:
+
+```php
+Iterate::every([1, 2], new Parkour\Functor\AlwaysTrue()); // true
+```
+
+### Transform
+
+```php
+use Parkour\Transform;
+```
+
+[combine()](#combine),
+[normalize()](#normalize),
+[reindex()](#reindex),
+[merge()](#merge).
+
+#### combine()
 
 ```php
 $data = [
@@ -227,7 +234,7 @@ $data = [
 	['id' => 37, 'name' => 'bar']
 ];
 
-Parkour::combine($data, function($row, $key) {
+Transform::combine($data, function($row, $key) {
 	yield $row['id'] => $row['name'];
 });
 
@@ -237,7 +244,7 @@ Parkour::combine($data, function($row, $key) {
 // ]
 ```
 
-### normalize()
+#### normalize()
 
 ```php
 $data = [
@@ -245,7 +252,7 @@ $data = [
 	'baz'
 ];
 
-Parkour::normalize($data, true);
+Transform::normalize($data, true);
 
 // [
 // 	'foo' => 'bar',
@@ -253,12 +260,12 @@ Parkour::normalize($data, true);
 // ]
 ```
 
-### reindex()
+#### reindex()
 
 ```php
 $data = ['foo' => 'bar'];
 
-Parkour::reindex($data, [
+Transform::reindex($data, [
 	'foo' => 'baz'
 ]);
 
@@ -267,7 +274,7 @@ Parkour::reindex($data, [
 // ]
 ```
 
-### merge()
+#### merge()
 
 ```php
 $first = [
@@ -286,7 +293,7 @@ $second = [
 	]
 ];
 
-Parkour::merge($first, $second);
+Transform::merge($first, $second);
 
 // [
 // 	'one' => 1,
@@ -298,19 +305,18 @@ Parkour::merge($first, $second);
 // ]
 ```
 
-### range()
+### Access
 
 ```php
-$range = Parkour::range(0, 5);
-
-foreach ($range as $number) {
-	echo $number;
-}
-
-// 012345
+use Parkour\Access;
 ```
 
-### has()
+[has()](#has),
+[get()](#get),
+[set()](#set),
+[update()](#update).
+
+#### has()
 
 ```php
 $data = [
@@ -320,11 +326,11 @@ $data = [
 	]
 ];
 
-Parkour::has($data, 'b.c'); // true
-Parkour::has($data, ['b', 'c']); // true
+Access::has($data, 'b.c'); // true
+Access::has($data, ['b', 'c']); // true
 ```
 
-### get()
+#### get()
 
 ```php
 $data = [
@@ -334,12 +340,12 @@ $data = [
 	]
 ];
 
-Parkour::get($data, 'a'); // 'foo'
-Parkour::get($data, 'b.c'); // 'bar'
-Parkour::get($data, ['b', 'c']); // 'bar'
+Access::get($data, 'a'); // 'foo'
+Access::get($data, 'b.c'); // 'bar'
+Access::get($data, ['b', 'c']); // 'bar'
 ```
 
-### set()
+#### set()
 
 ```php
 $data = [
@@ -349,9 +355,9 @@ $data = [
 	]
 ];
 
-$data = Parkour::set($data, 'a', 'a');
-$data = Parkour::set($data, 'b.c', 'c');
-$data = Parkour::set($data, ['b', 'd'], 'd');
+$data = Access::set($data, 'a', 'a');
+$data = Access::set($data, 'b.c', 'c');
+$data = Access::set($data, ['b', 'd'], 'd');
 
 // [
 // 	'a' => 'a',
@@ -362,7 +368,7 @@ $data = Parkour::set($data, ['b', 'd'], 'd');
 // ]
 ```
 
-### update()
+#### update()
 
 ```php
 $data = [
@@ -372,15 +378,15 @@ $data = [
 	]
 ];
 
-$data = Parkour::update($data, 'a', function($value) {
+$data = Access::update($data, 'a', function($value) {
 	return strtoupper($value);	
 });
 
-$data = Parkour::update($data, 'b.c', function($value) {
+$data = Access::update($data, 'b.c', function($value) {
 	return $value . $value;
 });
 
-$data = Parkour::update($data, ['b', 'd'], 'd');
+$data = Access::update($data, ['b', 'd'], 'd');
 
 // [
 // 	'a' => 'FOO',
@@ -411,24 +417,28 @@ Functors
 `NotIdentical`,
 `Substract`.
 
-The vast majority of these functors can be used in two different ways:
+The vast majority of these functors can be used in two different ways.
+
+Without any configuration:
 
 ```php
 $Add = new Parkour\Functor\Add();
-Parkour::reduce([10, 20], $Add, 0);
+Iterate::reduce([10, 20], $Add, 0);
 
 // is equivalent to:
-Parkour::reduce([10, 20], function($memo, $value) {
+Iterate::reduce([10, 20], function($memo, $value) {
 	return $memo + $value;
 }, 0);
 ```
 
+Or with a fixed parameter:
+
 ```php
 $Add = new Parkour\Functor\Add(5);
-Parkour::map([10, 20], $Add, 0);
+Iterate::map([10, 20], $Add, 0);
 
 // is equivalent to:
-Parkour::map([10, 20], function($value) {
+Iterate::map([10, 20], function($value) {
 	return $value + 5;
 }, 0);
 ```
