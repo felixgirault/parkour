@@ -16,7 +16,7 @@ class Execute {
 	/**
 	 *	Executes a callback on a value.
 	 *
-	 *	@param mixed $first Value.
+	 *	@param mixed $value Value.
 	 *	@param callable $cb Callback.
 	 *	@return mixed Result.
 	 */
