@@ -123,15 +123,17 @@ class TraverseTest extends TestCase {
 	 *
 	 */
 	public function testFilter() {
+		$closure = function() {
+			return $this->closure([
+				[1, 'a', false],
+				[2, 'b', true]
+			]);
+		};
+
 		$data = [
 			'a' => 1,
 			'b' => 2
 		];
-
-		$closure = $this->closure([
-			[1, 'a', false],
-			[2, 'b', true]
-		]);
 
 		$expected = [
 			'b' => 2
@@ -139,42 +141,46 @@ class TraverseTest extends TestCase {
 
 		$this->assertEquals(
 			$expected,
-			Traverse::filter($data, $closure)
+			Traverse::filter($data, $closure())
 		);
+
+		if (defined('ARRAY_FILTER_USE_BOTH')) {
+			$this->assertEquals(
+				$expected,
+				Traverse::nativeFilter($data, $closure())
+			);
+		} else {
+			$this->assertEquals(
+				$expected,
+				Traverse::ownFilter($data, $closure())
+			);
+		}
 	}
 
 	/**
 	 *
 	 */
-	public function testOwnFilter() {
-		$data = [
-			'a' => 1,
-			'b' => 2
-		];
-
-		$closure = $this->closure([
-			[1, 'a', false],
-			[2, 'b', true]
-		]);
-
-		$expected = [
-			'b' => 2
-		];
+	public function testFilterUnkeyed() {
+		$EqualTwo = new Equal(2);
+		$data = [1, 2, 1, 2];
+		$expected = [2, 2];
 
 		$this->assertEquals(
 			$expected,
-			Traverse::ownFilter($data, $closure)
+			Traverse::filter($data, $EqualTwo, false)
 		);
-	}
 
-	/**
-	 *
-	 */
-	public function testOwnFilterUnkeyed() {
-		$this->assertEquals(
-			[2],
-			Traverse::filter([1, 2], new Equal(2), false)
-		);
+		if (defined('ARRAY_FILTER_USE_BOTH')) {
+			$this->assertEquals(
+				$expected,
+				Traverse::nativeFilter($data, $EqualTwo, false)
+			);
+		} else {
+			$this->assertEquals(
+				$expected,
+				Traverse::ownFilter($data, $EqualTwo, false)
+			);
+		}
 	}
 
 	/**
