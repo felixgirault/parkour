@@ -11,7 +11,7 @@ namespace Parkour;
 /**
  *	A collection of utilities to manipulate arrays.
  */
-class Iterate {
+class Traverse {
 
 	/**
 	 *	Iterates over the given data.

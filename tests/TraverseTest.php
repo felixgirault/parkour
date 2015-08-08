@@ -17,7 +17,7 @@ use ReflectionClass;
 /**
  *
  */
-class ParkourTest extends TestCase {
+class TraverseTest extends TestCase {
 
 	/**
 	 *	Returns a closure constrained by the given values.
@@ -66,7 +66,7 @@ class ParkourTest extends TestCase {
 			[2, 'b', null]
 		]);
 
-		Iterate::each($data, $closure);
+		Traverse::each($data, $closure);
 	}
 
 	/**
@@ -90,7 +90,7 @@ class ParkourTest extends TestCase {
 
 		$this->assertEquals(
 			$expected,
-			Iterate::map($data, $closure)
+			Traverse::map($data, $closure)
 		);
 	}
 
@@ -115,7 +115,7 @@ class ParkourTest extends TestCase {
 
 		$this->assertEquals(
 			$expected,
-			Iterate::mapKeys($data, $closure)
+			Traverse::mapKeys($data, $closure)
 		);
 	}
 
@@ -139,7 +139,7 @@ class ParkourTest extends TestCase {
 
 		$this->assertEquals(
 			$expected,
-			Iterate::filter($data, $closure)
+			Traverse::filter($data, $closure)
 		);
 	}
 
@@ -163,7 +163,7 @@ class ParkourTest extends TestCase {
 
 		$this->assertEquals(
 			$expected,
-			Iterate::ownFilter($data, $closure)
+			Traverse::ownFilter($data, $closure)
 		);
 	}
 
@@ -173,7 +173,7 @@ class ParkourTest extends TestCase {
 	public function testOwnFilterUnkeyed() {
 		$this->assertEquals(
 			[2],
-			Iterate::filter([1, 2], new Equal(2), false)
+			Traverse::filter([1, 2], new Equal(2), false)
 		);
 	}
 
@@ -197,7 +197,7 @@ class ParkourTest extends TestCase {
 
 		$this->assertEquals(
 			$expected,
-			Iterate::reject($data, $closure)
+			Traverse::reject($data, $closure)
 		);
 	}
 
@@ -216,7 +216,7 @@ class ParkourTest extends TestCase {
 
 		$this->assertEquals(
 			$expected,
-			Iterate::reduce($data, $closure, 0)
+			Traverse::reduce($data, $closure, 0)
 		);
 	}
 
@@ -235,7 +235,7 @@ class ParkourTest extends TestCase {
 
 		$this->assertEquals(
 			$expected,
-			Iterate::find($data, $closure)
+			Traverse::find($data, $closure)
 		);
 	}
 
@@ -245,7 +245,7 @@ class ParkourTest extends TestCase {
 	public function testFindDefault() {
 		$this->assertEquals(
 			'default',
-			Iterate::find([], function() {}, 'default')
+			Traverse::find([], function() {}, 'default')
 		);
 	}
 
@@ -264,7 +264,7 @@ class ParkourTest extends TestCase {
 
 		$this->assertEquals(
 			$expected,
-			Iterate::findKey($data, $closure)
+			Traverse::findKey($data, $closure)
 		);
 	}
 
@@ -274,7 +274,7 @@ class ParkourTest extends TestCase {
 	public function testFindKeyDefault() {
 		$this->assertEquals(
 			'default',
-			Iterate::findKey([], new Identity(), 'default')
+			Traverse::findKey([], new Identity(), 'default')
 		);
 	}
 
@@ -289,13 +289,13 @@ class ParkourTest extends TestCase {
 			[2, 1, false]
 		]);
 
-		$this->assertFalse(Iterate::some($data, $closure));
+		$this->assertFalse(Traverse::some($data, $closure));
 
 		$closure = $this->closure([
 			[1, 0, true]
 		]);
 
-		$this->assertTrue(Iterate::some($data, $closure));
+		$this->assertTrue(Traverse::some($data, $closure));
 	}
 
 	/**
@@ -308,13 +308,13 @@ class ParkourTest extends TestCase {
 			[1, 0, false]
 		]);
 
-		$this->assertFalse(Iterate::every($data, $closure));
+		$this->assertFalse(Traverse::every($data, $closure));
 
 		$closure = $this->closure([
 			[1, 0, true],
 			[2, 1, true]
 		]);
 
-		$this->assertTrue(Iterate::every($data, $closure));
+		$this->assertTrue(Traverse::every($data, $closure));
 	}
 }

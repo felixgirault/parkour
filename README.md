@@ -15,7 +15,7 @@ Examples
 Using your own functions:
 
 ```php
-Parkour\Iterate::filter([5, 15, 20], function($value) {
+Parkour\Traverse::filter([5, 15, 20], function($value) {
 	return $value > 10;
 });
 
@@ -25,13 +25,13 @@ Parkour\Iterate::filter([5, 15, 20], function($value) {
 Using some of the built-in functors:
 
 ```php
-Parkour\Iterate::filter([5, 15, 20], new Parkour\Functor\Greater(10));
+Parkour\Traverse::filter([5, 15, 20], new Parkour\Functor\Greater(10));
 // [15, 20]
 
-Parkour\Iterate::map([10, 20], new Parkour\Functor\Multiply(2), 0);
+Parkour\Traverse::map([10, 20], new Parkour\Functor\Multiply(2), 0);
 // [20, 40]
 
-Parkour\Iterate::reduce([10, 20], new Parkour\Functor\Add(), 0);
+Parkour\Traverse::reduce([10, 20], new Parkour\Functor\Add(), 0);
 // 30
 
 ```
@@ -39,10 +39,10 @@ Parkour\Iterate::reduce([10, 20], new Parkour\Functor\Add(), 0);
 API
 ---
 
-### Iterate
+### Traverse
 
 ```php
-use Parkour\Iterate;
+use Parkour\Traverse;
 ```
 
 [each()](#each),
@@ -59,7 +59,7 @@ use Parkour\Iterate;
 #### each()
 
 ```php
-Iterate::each(['foo' => 'bar'], function($value, $key) {
+Traverse::each(['foo' => 'bar'], function($value, $key) {
 	echo "$key: $value";
 });
 
@@ -74,7 +74,7 @@ $data = [
 	'bar' => 2
 ];
 
-Iterate::map($data, function($value, $key) {
+Traverse::map($data, function($value, $key) {
 	return $value * 2;
 });
 
@@ -92,7 +92,7 @@ $data = [
 	'bar' => 2
 ];
 
-Iterate::map($data, function($value, $key) {
+Traverse::map($data, function($value, $key) {
 	return strtoupper($key);
 });
 
@@ -110,7 +110,7 @@ $data = [
 	'bar' => false
 ];
 
-Iterate::filter($data, function($value, $key) {
+Traverse::filter($data, function($value, $key) {
 	return $value === true;
 });
 
@@ -127,7 +127,7 @@ $data = [
 	'bar' => false
 ];
 
-Iterate::reject($data, function($value, $key) {
+Traverse::reject($data, function($value, $key) {
 	return $value === true;
 });
 
@@ -139,7 +139,7 @@ Iterate::reject($data, function($value, $key) {
 #### reduce()
 
 ```php
-Iterate::reduce([1, 2], function($memo, $value, $key) {
+Traverse::reduce([1, 2], function($memo, $value, $key) {
 	return $memo + $value;
 }, 0);
 
@@ -149,8 +149,8 @@ Iterate::reduce([1, 2], function($memo, $value, $key) {
 Using built-in functors:
 
 ```php
-Iterate::reduce([1, 2], new Parkour\Functor\Add(), 0); // 3
-Iterate::reduce([2, 2], new Parkour\Functor\Mutiply(), 2); // 8
+Traverse::reduce([1, 2], new Parkour\Functor\Add(), 0); // 3
+Traverse::reduce([2, 2], new Parkour\Functor\Mutiply(), 2); // 8
 ```
 
 #### find()
@@ -161,7 +161,7 @@ $data = [
 	'bar' => 'JavaScript'
 ];
 
-Iterate::find($data, function($value, $key) {
+Traverse::find($data, function($value, $key) {
 	return $key === 'foo';
 });
 
@@ -176,7 +176,7 @@ $data = [
 	'bar' => 'JavaScript'
 ];
 
-Iterate::findKey($data, function($value, $key) {
+Traverse::findKey($data, function($value, $key) {
 	return $value === 'PHP';
 });
 
@@ -186,7 +186,7 @@ Iterate::findKey($data, function($value, $key) {
 #### some()
 
 ```php
-Iterate::some([5, 10, 20], function($value, $key) {
+Traverse::some([5, 10, 20], function($value, $key) {
 	return $value > 10;
 });
 
@@ -196,13 +196,13 @@ Iterate::some([5, 10, 20], function($value, $key) {
 Using a built-in functor:
 
 ```php
-Iterate::some([1, 2], new Parkour\Functor\AlwaysFalse()); // false
+Traverse::some([1, 2], new Parkour\Functor\AlwaysFalse()); // false
 ```
 
 #### every()
 
 ```php
-Iterate::every([1, 2], function($value, $key) {
+Traverse::every([1, 2], function($value, $key) {
 	return $value === 1;
 });
 
@@ -212,7 +212,7 @@ Iterate::every([1, 2], function($value, $key) {
 Using a built-in functor:
 
 ```php
-Iterate::every([1, 2], new Parkour\Functor\AlwaysTrue()); // true
+Traverse::every([1, 2], new Parkour\Functor\AlwaysTrue()); // true
 ```
 
 ### Transform
@@ -423,10 +423,10 @@ Without any configuration:
 
 ```php
 $Add = new Parkour\Functor\Add();
-Iterate::reduce([10, 20], $Add, 0);
+Traverse::reduce([10, 20], $Add, 0);
 
 // is equivalent to:
-Iterate::reduce([10, 20], function($memo, $value) {
+Traverse::reduce([10, 20], function($memo, $value) {
 	return $memo + $value;
 }, 0);
 ```
@@ -435,10 +435,10 @@ Or with a fixed parameter:
 
 ```php
 $Add = new Parkour\Functor\Add(5);
-Iterate::map([10, 20], $Add, 0);
+Traverse::map([10, 20], $Add, 0);
 
 // is equivalent to:
-Iterate::map([10, 20], function($value) {
+Traverse::map([10, 20], function($value) {
 	return $value + 5;
 }, 0);
 ```
