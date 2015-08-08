@@ -123,12 +123,10 @@ class TraverseTest extends TestCase {
 	 *
 	 */
 	public function testFilter() {
-		$closure = function() {
-			return $this->closure([
-				[1, 'a', false],
-				[2, 'b', true]
-			]);
-		};
+		$closure = $this->closure([
+			[1, 'a', false],
+			[2, 'b', true]
+		]);
 
 		$data = [
 			'a' => 1,
@@ -141,20 +139,8 @@ class TraverseTest extends TestCase {
 
 		$this->assertEquals(
 			$expected,
-			Traverse::filter($data, $closure())
+			Traverse::filter($data, $closure)
 		);
-
-		if (defined('ARRAY_FILTER_USE_BOTH')) {
-			$this->assertEquals(
-				$expected,
-				Traverse::nativeFilter($data, $closure())
-			);
-		} else {
-			$this->assertEquals(
-				$expected,
-				Traverse::ownFilter($data, $closure())
-			);
-		}
 	}
 
 	/**
@@ -169,18 +155,6 @@ class TraverseTest extends TestCase {
 			$expected,
 			Traverse::filter($data, $EqualTwo, false)
 		);
-
-		if (defined('ARRAY_FILTER_USE_BOTH')) {
-			$this->assertEquals(
-				$expected,
-				Traverse::nativeFilter($data, $EqualTwo, false)
-			);
-		} else {
-			$this->assertEquals(
-				$expected,
-				Traverse::ownFilter($data, $EqualTwo, false)
-			);
-		}
 	}
 
 	/**
