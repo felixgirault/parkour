@@ -92,7 +92,7 @@ $data = [
 	'bar' => 2
 ];
 
-Traverse::map($data, function($value, $key) {
+Traverse::mapKeys($data, function($value, $key) {
 	return strtoupper($key);
 });
 
