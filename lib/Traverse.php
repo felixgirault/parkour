@@ -64,11 +64,39 @@ class Traverse {
 	 *	@return array Filtered data.
 	 */
 	public static function filter(array $data, callable $cb, $keyed = true) {
+		return defined('ARRAY_FILTER_USE_BOTH')
+			? self::nativeFilter($data, $cb, $keyed)
+			: self::customFilter($data, $cb, $keyed);
+	}
+
+	/**
+	 *	@see filter()
+	 */
+	public static function nativeFilter(array $data, callable $cb, $keyed = true) {
 		$filtered = array_filter($data, $cb, ARRAY_FILTER_USE_BOTH);
 
 		return $keyed
 			? $filtered
 			: array_values($filtered);
+	}
+
+	/**
+	 *	@see filter()
+	 */
+	public static function customFilter(array $data, callable $cb, $keyed = true) {
+		$filtered = [];
+
+		foreach ($data as $key => $value) {
+			if (call_user_func($cb, $value, $key)) {
+				if ($keyed) {
+					$filtered[$key] = $value;
+				} else {
+					$filtered[] = $value;
+				}
+			}
+		}
+
+		return $filtered;
 	}
 
 	/**

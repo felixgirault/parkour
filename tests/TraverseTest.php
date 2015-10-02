@@ -123,24 +123,38 @@ class TraverseTest extends TestCase {
 	 *
 	 */
 	public function testFilter() {
-		$closure = $this->closure([
-			[1, 'a', false],
-			[2, 'b', true]
-		]);
-
-		$data = [
-			'a' => 1,
-			'b' => 2
+		$methods = [
+			'filter',
+			'customFilter'
 		];
 
-		$expected = [
-			'b' => 2
-		];
+		if (defined('ARRAY_FILTER_USE_BOTH')) {
+			$methods[] = 'nativeFilter';
+		}
 
-		$this->assertEquals(
-			$expected,
-			Traverse::filter($data, $closure)
-		);
+		foreach ($methods as $method) {
+			$closure = $this->closure([
+				[1, 'a', false],
+				[2, 'b', true]
+			]);
+
+			$data = [
+				'a' => 1,
+				'b' => 2
+			];
+
+			$expected = [
+				'b' => 2
+			];
+
+			$result = call_user_func(
+				['\\Parkour\\Traverse', $method],
+				$data,
+				$closure
+			);
+
+			$this->assertEquals($expected, $result);
+		}
 	}
 
 	/**
